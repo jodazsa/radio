@@ -125,9 +125,10 @@ banks:
       3: { name: "Tom Petty", url: "STATION_URL" }
       4: { name: "Iggy Confidential", url: "STATION_URL" }
       5: { name: "Jarvis Cocker", url: "STATION_URL" }
-      6: { name: "Kathy Mattea - Mountain Stage on NPR", url: "STATION_URL" }
+      6: { name: "Paul McCartney Oobu Joobu", url: "STATION_URL" }
       7: { name: "Elton John Rocket Hour", url: "STATION_URL" }
       8: { name: "Henry Rollins KCRW Los Angeles", url: "STATION_URL" }
-      9: { name: "BBC 6 Music Artist in Residence", url: "STATION_URL" }
+      9: { name: "BBC 6 Music Artists in Residence", url: "STATION_URL" }
+
 
 
