@@ -1,10 +1,131 @@
 banks:
   0:
+    name: "Flyover States"
+    stations:
+      0: { name: "KUAF 1 - Fayetteville AR", url: "https://war.streamguys1.com:7031/kuaf1" }
+      1: { name: "KJAX - Aspen", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/KAJXFMAAC.aac" }
+      2: { name: "STATION_NAME", url: "STATION_URL" }
+      3: { name: "STATION_NAME", url: "STATION_URL" }
+      4: { name: "STATION_NAME", url: "STATION_URL" }
+      5: { name: "STATION_NAME", url: "STATION_URL" }
+      6: { name: "STATION_NAME", url: "STATION_URL" }
+      7: { name: "STATION_NAME", url: "STATION_URL" }
+      8: { name: "STATION_NAME", url: "STATION_URL" }
+      9: { name: "STATION_NAME", url: "STATION_URL" }
+  1:
+    name: "BBC"
+    stations:
+      0: { name: "BBC Radio One", url: "http://as-hls-ww-live.akamaized.net/pool_01505109/live/ww/bbc_radio_one/bbc_radio_one.isml/bbc_radio_one-audio%3d320000.norewind.m3u8" }
+      1: { name: "BBC Radio Two", url: "http://as-hls-ww-live.akamaized.net/pool_74208725/live/ww/bbc_radio_two/bbc_radio_two.isml/bbc_radio_two-audio%3d320000.norewind.m3u8" }
+      2: { name: "BBC Radio Three", url: "http://as-hls-ww-live.akamaized.net/pool_23461179/live/ww/bbc_radio_three/bbc_radio_three.isml/bbc_radio_three-audio%3d320000.norewind.m3u8" }
+      3: { name: "BBC Radio Three Unwind", url: "http://as-hls-ww-live.akamaized.net/pool_30624046/live/ww/bbc_radio_three_unwind/bbc_radio_three_unwind.isml/bbc_radio_three_unwind-audio%3d320000.norewind.m3u8" }
+      4: { name: "BBC Radio Four", url: "http://as-hls-ww-live.akamaized.net/pool_55057080/live/ww/bbc_radio_fourfm/bbc_radio_fourfm.isml/bbc_radio_fourfm-audio%3d320000.norewind.m3u8" }
+      5: { name: "BBC Radio Five Live", url: "http://as-hls-ww-live.akamaized.net/pool_89021708/live/ww/bbc_radio_five_live/bbc_radio_five_live.isml/bbc_radio_five_live-audio%3d320000.norewind.m3u8" }
+      6: { name: "BBC Radio Six Music", url: "http://as-hls-ww-live.akamaized.net/pool_81827798/live/ww/bbc_6music/bbc_6music.isml/bbc_6music-audio%3d320000.norewind.m3u8" }
+      7: { name: "BBC Radio Scotland", url: "http://as-hls-ww-live.akamaized.net/pool_43322914/live/ww/bbc_radio_scotland_fm/bbc_radio_scotland_fm.isml/bbc_radio_scotland_fm-audio%3d320000.norewind.m3u8" }
+      8: { name: "BBC Radio Wales", url: "http://as-hls-ww-live.akamaized.net/pool_97517794/live/ww/bbc_radio_wales_fm/bbc_radio_wales_fm.isml/bbc_radio_wales_fm-audio%3d320000.norewind.m3u8" }
+      9: { name: "BBC Radio World Service", url: "http://as-hls-ww-live.akamaized.net/pool_87948813/live/ww/bbc_world_service/bbc_world_service.isml/bbc_world_service-audio%3d320000.norewind.m3u8" }
+  2:
+    name: "New York"
+    stations:
+      0: { name: "STATION_NAME", url: "STATION_URL" }
+      1: { name: "STATION_NAME", url: "STATION_URL" }
+      2: { name: "STATION_NAME", url: "STATION_URL" }
+      3: { name: "STATION_NAME", url: "STATION_URL" }
+      4: { name: "STATION_NAME", url: "STATION_URL" }
+      5: { name: "STATION_NAME", url: "STATION_URL" }
+      6: { name: "STATION_NAME", url: "STATION_URL" }
+      7: { name: "STATION_NAME", url: "STATION_URL" }
+      8: { name: "STATION_NAME", url: "STATION_URL" }
+      9: { name: "STATION_NAME", url: "STATION_URL" }
+  3:
+    name: "California"
+    stations:
+      0: { name: "STATION_NAME", url: "STATION_URL" }
+      1: { name: "STATION_NAME", url: "STATION_URL" }
+      2: { name: "STATION_NAME", url: "STATION_URL" }
+      3: { name: "STATION_NAME", url: "STATION_URL" }
+      4: { name: "STATION_NAME", url: "STATION_URL" }
+      5: { name: "STATION_NAME", url: "STATION_URL" }
+      6: { name: "STATION_NAME", url: "STATION_URL" }
+      7: { name: "STATION_NAME", url: "STATION_URL" }
+      8: { name: "STATION_NAME", url: "STATION_URL" }
+      9: { name: "STATION_NAME", url: "STATION_URL" }
+  4:
+    name: "Jazz"
+    stations:
+      0: { name: "STATION_NAME", url: "STATION_URL" }
+      1: { name: "STATION_NAME", url: "STATION_URL" }
+      2: { name: "STATION_NAME", url: "STATION_URL" }
+      3: { name: "STATION_NAME", url: "STATION_URL" }
+      4: { name: "STATION_NAME", url: "STATION_URL" }
+      5: { name: "STATION_NAME", url: "STATION_URL" }
+      6: { name: "STATION_NAME", url: "STATION_URL" }
+      7: { name: "STATION_NAME", url: "STATION_URL" }
+      8: { name: "STATION_NAME", url: "STATION_URL" }
+      9: { name: "STATION_NAME", url: "STATION_URL" }
+  5:
     name: "News"
     stations:
-      0: { name: "KUAF 1", url: "https://war.streamguys1.com:7031/kuaf1" }
-      1: { name: "Example", url: "https://example.com/stream.mp3" }
-  1:
-    name: "Music"
+      0: { name: "STATION_NAME", url: "STATION_URL" }
+      1: { name: "STATION_NAME", url: "STATION_URL" }
+      2: { name: "STATION_NAME", url: "STATION_URL" }
+      3: { name: "STATION_NAME", url: "STATION_URL" }
+      4: { name: "STATION_NAME", url: "STATION_URL" }
+      5: { name: "STATION_NAME", url: "STATION_URL" }
+      6: { name: "STATION_NAME", url: "STATION_URL" }
+      7: { name: "STATION_NAME", url: "STATION_URL" }
+      8: { name: "STATION_NAME", url: "STATION_URL" }
+      9: { name: "STATION_NAME", url: "STATION_URL" }
+  6:
+    name: "BANK_NAME"
     stations:
-      0: { name: "Example 2", url: "https://example.com/stream2.mp3" }
+      0: { name: "STATION_NAME", url: "STATION_URL" }
+      1: { name: "STATION_NAME", url: "STATION_URL" }
+      2: { name: "STATION_NAME", url: "STATION_URL" }
+      3: { name: "STATION_NAME", url: "STATION_URL" }
+      4: { name: "STATION_NAME", url: "STATION_URL" }
+      5: { name: "STATION_NAME", url: "STATION_URL" }
+      6: { name: "STATION_NAME", url: "STATION_URL" }
+      7: { name: "STATION_NAME", url: "STATION_URL" }
+      8: { name: "STATION_NAME", url: "STATION_URL" }
+      9: { name: "STATION_NAME", url: "STATION_URL" }
+  7:
+    name: "BANK_NAME"
+    stations:
+      0: { name: "STATION_NAME", url: "STATION_URL" }
+      1: { name: "STATION_NAME", url: "STATION_URL" }
+      2: { name: "STATION_NAME", url: "STATION_URL" }
+      3: { name: "STATION_NAME", url: "STATION_URL" }
+      4: { name: "STATION_NAME", url: "STATION_URL" }
+      5: { name: "STATION_NAME", url: "STATION_URL" }
+      6: { name: "STATION_NAME", url: "STATION_URL" }
+      7: { name: "STATION_NAME", url: "STATION_URL" }
+      8: { name: "STATION_NAME", url: "STATION_URL" }
+      9: { name: "STATION_NAME", url: "STATION_URL" }
+  8:
+    name: "Grand Theft Auto"
+    stations:
+      0: { name: "STATION_NAME", url: "STATION_URL" }
+      1: { name: "STATION_NAME", url: "STATION_URL" }
+      2: { name: "STATION_NAME", url: "STATION_URL" }
+      3: { name: "STATION_NAME", url: "STATION_URL" }
+      4: { name: "STATION_NAME", url: "STATION_URL" }
+      5: { name: "STATION_NAME", url: "STATION_URL" }
+      6: { name: "STATION_NAME", url: "STATION_URL" }
+      7: { name: "STATION_NAME", url: "STATION_URL" }
+      8: { name: "STATION_NAME", url: "STATION_URL" }
+      9: { name: "STATION_NAME", url: "STATION_URL" }
+  9:
+    name: "Offline Recordings"
+    stations:
+      0: { name: "Theme Time Radio with Bob Dylan", url: "STATION_URL" }
+      1: { name: "Joe Strummer", url: "STATION_URL" }
+      2: { name: "Willie Nelson", url: "STATION_URL" }
+      3: { name: "Tom Petty", url: "STATION_URL" }
+      4: { name: "STATION_NAME", url: "STATION_URL" }
+      5: { name: "STATION_NAME", url: "STATION_URL" }
+      6: { name: "STATION_NAME", url: "STATION_URL" }
+      7: { name: "STATION_NAME", url: "STATION_URL" }
+      8: { name: "STATION_NAME", url: "STATION_URL" }
+      9: { name: "STATION_NAME", url: "STATION_URL" }
