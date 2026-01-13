@@ -1,0 +1,10 @@
+banks:
+  0:
+    name: "News"
+    stations:
+      0: { name: "KUAF 1", url: "https://war.streamguys1.com:7031/kuaf1" }
+      1: { name: "Example", url: "https://example.com/stream.mp3" }
+  1:
+    name: "Music"
+    stations:
+      0: { name: "Example 2", url: "https://example.com/stream2.mp3" }
