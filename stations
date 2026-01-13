@@ -78,9 +78,9 @@ banks:
       8: { name: "STATION_NAME", url: "STATION_URL" }
       9: { name: "STATION_NAME", url: "STATION_URL" }
   6:
-    name: "BANK_NAME"
+    name: "College Stations"
     stations:
-      0: { name: "STATION_NAME", url: "STATION_URL" }
+      0: { name: "NYU", url: "STATION_URL" }
       1: { name: "STATION_NAME", url: "STATION_URL" }
       2: { name: "STATION_NAME", url: "STATION_URL" }
       3: { name: "STATION_NAME", url: "STATION_URL" }
@@ -91,7 +91,7 @@ banks:
       8: { name: "STATION_NAME", url: "STATION_URL" }
       9: { name: "STATION_NAME", url: "STATION_URL" }
   7:
-    name: "BANK_NAME"
+    name: "Internet Broadcasts"
     stations:
       0: { name: "STATION_NAME", url: "STATION_URL" }
       1: { name: "STATION_NAME", url: "STATION_URL" }
