@@ -1,0 +1,133 @@
+banks:
+  0:
+    name: "Flyover States"
+    stations:
+      0: { name: "KUAF - Fayetteville AR", url: "https://war.streamguys1.com:7031/kuaf1" }
+      1: { name: "KJAX - Aspen", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/KAJXFMAAC.aac" }
+      2: { name: "KEXP - Seattle", url: "STATION_URL" }
+      3: { name: "WWOZ - New Orleans", url: "STATION_URL" }
+      4: { name: "STATION_NAME", url: "STATION_URL" }
+      5: { name: "STATION_NAME", url: "STATION_URL" }
+      6: { name: "STATION_NAME", url: "STATION_URL" }
+      7: { name: "STATION_NAME", url: "STATION_URL" }
+      8: { name: "STATION_NAME", url: "STATION_URL" }
+      9: { name: "STATION_NAME", url: "STATION_URL" }
+  1:
+    name: "BBC"
+    stations:
+      0: { name: "BBC Radio One", url: "http://as-hls-ww-live.akamaized.net/pool_01505109/live/ww/bbc_radio_one/bbc_radio_one.isml/bbc_radio_one-audio%3d320000.norewind.m3u8" }
+      1: { name: "BBC Radio Two", url: "http://as-hls-ww-live.akamaized.net/pool_74208725/live/ww/bbc_radio_two/bbc_radio_two.isml/bbc_radio_two-audio%3d320000.norewind.m3u8" }
+      2: { name: "BBC Radio Three", url: "http://as-hls-ww-live.akamaized.net/pool_23461179/live/ww/bbc_radio_three/bbc_radio_three.isml/bbc_radio_three-audio%3d320000.norewind.m3u8" }
+      3: { name: "BBC Radio Three Unwind", url: "http://as-hls-ww-live.akamaized.net/pool_30624046/live/ww/bbc_radio_three_unwind/bbc_radio_three_unwind.isml/bbc_radio_three_unwind-audio%3d320000.norewind.m3u8" }
+      4: { name: "BBC Radio Four", url: "http://as-hls-ww-live.akamaized.net/pool_55057080/live/ww/bbc_radio_fourfm/bbc_radio_fourfm.isml/bbc_radio_fourfm-audio%3d320000.norewind.m3u8" }
+      5: { name: "BBC Radio Five Live", url: "http://as-hls-ww-live.akamaized.net/pool_89021708/live/ww/bbc_radio_five_live/bbc_radio_five_live.isml/bbc_radio_five_live-audio%3d320000.norewind.m3u8" }
+      6: { name: "BBC Radio Six Music", url: "http://as-hls-ww-live.akamaized.net/pool_81827798/live/ww/bbc_6music/bbc_6music.isml/bbc_6music-audio%3d320000.norewind.m3u8" }
+      7: { name: "BBC Radio Scotland", url: "http://as-hls-ww-live.akamaized.net/pool_43322914/live/ww/bbc_radio_scotland_fm/bbc_radio_scotland_fm.isml/bbc_radio_scotland_fm-audio%3d320000.norewind.m3u8" }
+      8: { name: "BBC Radio Wales", url: "http://as-hls-ww-live.akamaized.net/pool_97517794/live/ww/bbc_radio_wales_fm/bbc_radio_wales_fm.isml/bbc_radio_wales_fm-audio%3d320000.norewind.m3u8" }
+      9: { name: "BBC Radio World Service", url: "http://as-hls-ww-live.akamaized.net/pool_87948813/live/ww/bbc_world_service/bbc_world_service.isml/bbc_world_service-audio%3d320000.norewind.m3u8" }
+  2:
+    name: "New York"
+    stations:
+      0: { name: "STATION_NAME", url: "STATION_URL" }
+      1: { name: "STATION_NAME", url: "STATION_URL" }
+      2: { name: "STATION_NAME", url: "STATION_URL" }
+      3: { name: "STATION_NAME", url: "STATION_URL" }
+      4: { name: "STATION_NAME", url: "STATION_URL" }
+      5: { name: "STATION_NAME", url: "STATION_URL" }
+      6: { name: "STATION_NAME", url: "STATION_URL" }
+      7: { name: "STATION_NAME", url: "STATION_URL" }
+      8: { name: "STATION_NAME", url: "STATION_URL" }
+      9: { name: "STATION_NAME", url: "STATION_URL" }
+  3:
+    name: "California"
+    stations:
+      0: { name: "KCRW - Los Angeles", url: "STATION_URL" }
+      1: { name: "STATION_NAME", url: "STATION_URL" }
+      2: { name: "STATION_NAME", url: "STATION_URL" }
+      3: { name: "STATION_NAME", url: "STATION_URL" }
+      4: { name: "STATION_NAME", url: "STATION_URL" }
+      5: { name: "STATION_NAME", url: "STATION_URL" }
+      6: { name: "STATION_NAME", url: "STATION_URL" }
+      7: { name: "STATION_NAME", url: "STATION_URL" }
+      8: { name: "STATION_NAME", url: "STATION_URL" }
+      9: { name: "STATION_NAME", url: "STATION_URL" }
+  4:
+    name: "Jazz"
+    stations:
+      0: { name: "STATION_NAME", url: "STATION_URL" }
+      1: { name: "STATION_NAME", url: "STATION_URL" }
+      2: { name: "STATION_NAME", url: "STATION_URL" }
+      3: { name: "STATION_NAME", url: "STATION_URL" }
+      4: { name: "STATION_NAME", url: "STATION_URL" }
+      5: { name: "STATION_NAME", url: "STATION_URL" }
+      6: { name: "STATION_NAME", url: "STATION_URL" }
+      7: { name: "STATION_NAME", url: "STATION_URL" }
+      8: { name: "STATION_NAME", url: "STATION_URL" }
+      9: { name: "STATION_NAME", url: "STATION_URL" }
+  5:
+    name: "News"
+    stations:
+      0: { name: "STATION_NAME", url: "STATION_URL" }
+      1: { name: "STATION_NAME", url: "STATION_URL" }
+      2: { name: "STATION_NAME", url: "STATION_URL" }
+      3: { name: "STATION_NAME", url: "STATION_URL" }
+      4: { name: "STATION_NAME", url: "STATION_URL" }
+      5: { name: "STATION_NAME", url: "STATION_URL" }
+      6: { name: "STATION_NAME", url: "STATION_URL" }
+      7: { name: "STATION_NAME", url: "STATION_URL" }
+      8: { name: "STATION_NAME", url: "STATION_URL" }
+      9: { name: "STATION_NAME", url: "STATION_URL" }
+  6:
+    name: "College Stations"
+    stations:
+      0: { name: "NYU", url: "STATION_URL" }
+      1: { name: "STATION_NAME", url: "STATION_URL" }
+      2: { name: "STATION_NAME", url: "STATION_URL" }
+      3: { name: "STATION_NAME", url: "STATION_URL" }
+      4: { name: "STATION_NAME", url: "STATION_URL" }
+      5: { name: "STATION_NAME", url: "STATION_URL" }
+      6: { name: "STATION_NAME", url: "STATION_URL" }
+      7: { name: "STATION_NAME", url: "STATION_URL" }
+      8: { name: "STATION_NAME", url: "STATION_URL" }
+      9: { name: "STATION_NAME", url: "STATION_URL" }
+  7:
+    name: "Internet Broadcasts"
+    stations:
+      0: { name: "STATION_NAME", url: "STATION_URL" }
+      1: { name: "STATION_NAME", url: "STATION_URL" }
+      2: { name: "STATION_NAME", url: "STATION_URL" }
+      3: { name: "STATION_NAME", url: "STATION_URL" }
+      4: { name: "STATION_NAME", url: "STATION_URL" }
+      5: { name: "STATION_NAME", url: "STATION_URL" }
+      6: { name: "STATION_NAME", url: "STATION_URL" }
+      7: { name: "STATION_NAME", url: "STATION_URL" }
+      8: { name: "STATION_NAME", url: "STATION_URL" }
+      9: { name: "STATION_NAME", url: "STATION_URL" }
+  8:
+    name: "Grand Theft Auto"
+    stations:
+      0: { name: "GTA IV The Beat", url: "STATION_URL" }
+      1: { name: "K-DST The Dust", url: "STATION_URL" }
+      2: { name: "Non-Stop Pop FM", url: "STATION_URL" }
+      3: { name: "Vice City Flash FM", url: "STATION_URL" }
+      4: { name: "GTA V Los Santos Rock Radio", url: "STATION_URL" }
+      5: { name: "San Andreas Radio Los Santos", url: "STATION_URL" }
+      6: { name: "GTA V blonded Los Santos", url: "STATION_URL" }
+      7: { name: "GTA V Rebel Radio", url: "STATION_URL" }
+      8: { name: "San Andreas K-Jah West", url: "STATION_URL" }
+      9: { name: "GTA IV Vladivostok FM", url: "STATION_URL" }
+  9:
+    name: "Offline Recordings"
+    stations:
+      0: { name: "Theme Time Radio with Bob Dylan", url: "STATION_URL" }
+      1: { name: "Joe Strummer", url: "STATION_URL" }
+      2: { name: "Willie Nelson", url: "STATION_URL" }
+      3: { name: "Tom Petty", url: "STATION_URL" }
+      4: { name: "Iggy Confidential", url: "STATION_URL" }
+      5: { name: "Jarvis Cocker", url: "STATION_URL" }
+      6: { name: "Kathy Mattea - Mountain Stage on NPR", url: "STATION_URL" }
+      7: { name: "Elton John Rocket Hour", url: "STATION_URL" }
+      8: { name: "Henry Rollins KCRW Los Angeles", url: "STATION_URL" }
+      9: { name: "BBC 6 Music Artist in Residence", url: "STATION_URL" }
+
+
