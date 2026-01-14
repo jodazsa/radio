@@ -9,35 +9,35 @@ banks:
       1:
         name: "WBGO"
         type: stream
-        url: "PLACEHOLDER_URL"
+        url: "https://ais-sa8.cdnstream1.com/3629_64.aac"
       2:
         name: "WDCB"
         type: stream
-        url: "PLACEHOLDER_URL"
+        url: "https://ais-sa8.cdnstream1.com/3629_64.aac"
       3:
         name: "KMHD"
         type: stream
-        url: "PLACEHOLDER_URL"
+        url: "https://ais-sa3.cdnstream1.com/2442_128.aac/playlist.m3u8?kmhd"
       4:
         name: "KCSM"
         type: stream
-        url: "PLACEHOLDER_URL"
+        url: "https://ice7.securenetsystems.net/KCSM2?uuid=ekbjjl52"
       5:
-        name: "WKCR"
+        name: "WPFW"
         type: stream
-        url: "PLACEHOLDER_URL"
+        url: "https://streams.pacifica.org:9000/wpfw_128?t=1768428919225"
       6:
         name: "KUVO"
         type: stream
-        url: "PLACEHOLDER_URL"
+        url: "https://kuvo.streamguys1.com/kuvo-aac-128"
       7:
         name: "CJRT 91.1 Jazz FM"
         type: stream
-        url: "PLACEHOLDER_URL"
+        url: "https://hil-streamb1-ais-relay1.streamb.live/SB00009/playlist.m3u8"
       8:
-        name: "PLACEHOLDER"
+        name: "Jazz 88.3 San Diego"
         type: stream
-        url: "PLACEHOLDER_URL"
+        url: "https://ksds-ice.streamguys1.com/ksds.mp3"
       9:
         name: "Czech Jazz"
         type: stream
@@ -470,5 +470,6 @@ banks:
           - "folder/folder/episode1.mp3"
           - "folder/folder/episode2.mp3"
           - "folder/folder/episode3.mp3"
+
 
 
