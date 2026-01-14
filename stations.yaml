@@ -1,111 +1,348 @@
 banks:
   0:
-    name: "Flyover States"
-    stations:
-      0:
-        name: "KUAF - Fayetteville AR"
-        type: stream
-        url: "https://war.streamguys1.com:7031/kuaf1"
-      1: { name: "KJAX - Aspen", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/KAJXFMAAC.aac" }
-      2: { name: "KEXP - Seattle", url: "STATION_URL" }
-      3: { name: "WWOZ - New Orleans", url: "STATION_URL" }
-      4: { name: "STATION_NAME", url: "STATION_URL" }
-      5: { name: "STATION_NAME", url: "STATION_URL" }
-      6: { name: "STATION_NAME", url: "STATION_URL" }
-      7: { name: "STATION_NAME", url: "STATION_URL" }
-      8: { name: "STATION_NAME", url: "STATION_URL" }
-      9: { name: "STATION_NAME", url: "STATION_URL" }
-  1:
-    name: "BBC"
-    stations:
-      0: { name: "BBC Radio One", url: "http://as-hls-ww-live.akamaized.net/pool_01505109/live/ww/bbc_radio_one/bbc_radio_one.isml/bbc_radio_one-audio%3d320000.norewind.m3u8" }
-      1: { name: "BBC Radio Two", url: "http://as-hls-ww-live.akamaized.net/pool_74208725/live/ww/bbc_radio_two/bbc_radio_two.isml/bbc_radio_two-audio%3d320000.norewind.m3u8" }
-      2: { name: "BBC Radio Three", url: "http://as-hls-ww-live.akamaized.net/pool_23461179/live/ww/bbc_radio_three/bbc_radio_three.isml/bbc_radio_three-audio%3d320000.norewind.m3u8" }
-      3: { name: "BBC Radio Three Unwind", url: "http://as-hls-ww-live.akamaized.net/pool_30624046/live/ww/bbc_radio_three_unwind/bbc_radio_three_unwind.isml/bbc_radio_three_unwind-audio%3d320000.norewind.m3u8" }
-      4: { name: "BBC Radio Four", url: "http://as-hls-ww-live.akamaized.net/pool_55057080/live/ww/bbc_radio_fourfm/bbc_radio_fourfm.isml/bbc_radio_fourfm-audio%3d320000.norewind.m3u8" }
-      5: { name: "BBC Radio Five Live", url: "http://as-hls-ww-live.akamaized.net/pool_89021708/live/ww/bbc_radio_five_live/bbc_radio_five_live.isml/bbc_radio_five_live-audio%3d320000.norewind.m3u8" }
-      6: { name: "BBC Radio Six Music", url: "http://as-hls-ww-live.akamaized.net/pool_81827798/live/ww/bbc_6music/bbc_6music.isml/bbc_6music-audio%3d320000.norewind.m3u8" }
-      7: { name: "BBC Radio Scotland", url: "http://as-hls-ww-live.akamaized.net/pool_43322914/live/ww/bbc_radio_scotland_fm/bbc_radio_scotland_fm.isml/bbc_radio_scotland_fm-audio%3d320000.norewind.m3u8" }
-      8: { name: "BBC Radio Wales", url: "http://as-hls-ww-live.akamaized.net/pool_97517794/live/ww/bbc_radio_wales_fm/bbc_radio_wales_fm.isml/bbc_radio_wales_fm-audio%3d320000.norewind.m3u8" }
-      9: { name: "BBC Radio World Service", url: "http://as-hls-ww-live.akamaized.net/pool_87948813/live/ww/bbc_world_service/bbc_world_service.isml/bbc_world_service-audio%3d320000.norewind.m3u8" }
-  2:
-    name: "New York"
-    stations:
-      0: { name: "STATION_NAME", url: "STATION_URL" }
-      1: { name: "STATION_NAME", url: "STATION_URL" }
-      2: { name: "STATION_NAME", url: "STATION_URL" }
-      3: { name: "STATION_NAME", url: "STATION_URL" }
-      4: { name: "STATION_NAME", url: "STATION_URL" }
-      5: { name: "STATION_NAME", url: "STATION_URL" }
-      6: { name: "STATION_NAME", url: "STATION_URL" }
-      7: { name: "STATION_NAME", url: "STATION_URL" }
-      8: { name: "STATION_NAME", url: "STATION_URL" }
-      9: { name: "STATION_NAME", url: "STATION_URL" }
-  3:
-    name: "California"
-    stations:
-      0: { name: "KCRW - Los Angeles", url: "STATION_URL" }
-      1: { name: "STATION_NAME", url: "STATION_URL" }
-      2: { name: "STATION_NAME", url: "STATION_URL" }
-      3: { name: "STATION_NAME", url: "STATION_URL" }
-      4: { name: "STATION_NAME", url: "STATION_URL" }
-      5: { name: "STATION_NAME", url: "STATION_URL" }
-      6: { name: "STATION_NAME", url: "STATION_URL" }
-      7: { name: "STATION_NAME", url: "STATION_URL" }
-      8: { name: "STATION_NAME", url: "STATION_URL" }
-      9: { name: "STATION_NAME", url: "STATION_URL" }
-  4:
     name: "Jazz"
     stations:
-      0: { name: "STATION_NAME", url: "STATION_URL" }
-      1: { name: "STATION_NAME", url: "STATION_URL" }
-      2: { name: "STATION_NAME", url: "STATION_URL" }
-      3: { name: "STATION_NAME", url: "STATION_URL" }
-      4: { name: "STATION_NAME", url: "STATION_URL" }
-      5: { name: "STATION_NAME", url: "STATION_URL" }
-      6: { name: "STATION_NAME", url: "STATION_URL" }
-      7: { name: "STATION_NAME", url: "STATION_URL" }
-      8: { name: "STATION_NAME", url: "STATION_URL" }
-      9: { name: "STATION_NAME", url: "STATION_URL" }
+      0:
+        name: "WWOZ New Orleans"
+        type: stream
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
+      1:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      2:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      3:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      4:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      5:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      6:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      7:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      8:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      9:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+  1:
+    name: "Classical"
+    stations:
+      0:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      1:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      2:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      3:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      4:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      5:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      6:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      7:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      8:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      9:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+  2:
+    name: "Around the US"
+    stations:
+      0:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      1:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      2:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      3:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      4:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      5:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      6:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      7:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      8:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      9:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+  3:
+    name: "Around the world 1"
+    stations:
+      0:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      1:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      2:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      3:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      4:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      5:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      6:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      7:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      8:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      9:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+  4:
+    name: "Around the world 2"
+    stations:
+      0:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      1:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      2:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      3:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      4:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      5:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      6:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      7:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      8:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      9:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
   5:
-    name: "News"
+    name: "BBC"
     stations:
-      0: { name: "STATION_NAME", url: "STATION_URL" }
-      1: { name: "STATION_NAME", url: "STATION_URL" }
-      2: { name: "STATION_NAME", url: "STATION_URL" }
-      3: { name: "STATION_NAME", url: "STATION_URL" }
-      4: { name: "STATION_NAME", url: "STATION_URL" }
-      5: { name: "STATION_NAME", url: "STATION_URL" }
-      6: { name: "STATION_NAME", url: "STATION_URL" }
-      7: { name: "STATION_NAME", url: "STATION_URL" }
-      8: { name: "STATION_NAME", url: "STATION_URL" }
-      9: { name: "STATION_NAME", url: "STATION_URL" }
+      0:
+        name: "BBC Radio One"
+        type: stream
+        url: "http://as-hls-ww-live.akamaized.net/pool_01505109/live/ww/bbc_radio_one/bbc_radio_one.isml/bbc_radio_one-audio%3d320000.norewind.m3u8"
+      1:
+        name: "BBC Radio Two"
+        type: stream
+        url: "http://as-hls-ww-live.akamaized.net/pool_74208725/live/ww/bbc_radio_two/bbc_radio_two.isml/bbc_radio_two-audio%3d320000.norewind.m3u8"
+      2:
+        name: "BBC Radio Three"
+        type: stream
+        url: "http://as-hls-ww-live.akamaized.net/pool_23461179/live/ww/bbc_radio_three/bbc_radio_three.isml/bbc_radio_three-audio%3d320000.norewind.m3u8"
+      3:
+        name: "BBC Radio Four"
+        type: stream
+        url: "http://as-hls-ww-live.akamaized.net/pool_55057080/live/ww/bbc_radio_fourfm/bbc_radio_fourfm.isml/bbc_radio_fourfm-audio%3d320000.norewind.m3u8"
+      4:
+        name: "BBC Radio Five Live"
+        type: stream
+        url: "http://as-hls-ww-live.akamaized.net/pool_89021708/live/ww/bbc_radio_five_live/bbc_radio_five_live.isml/bbc_radio_five_live-audio%3d320000.norewind.m3u8"
+      5:
+        name: "BBC Radio Six Music"
+        type: stream
+        url: "http://as-hls-ww-live.akamaized.net/pool_81827798/live/ww/bbc_6music/bbc_6music.isml/bbc_6music-audio%3d320000.norewind.m3u8"
+      6:
+        name: "BBC Radio Scotland"
+        type: stream
+        url: "http://as-hls-ww-live.akamaized.net/pool_43322914/live/ww/bbc_radio_scotland_fm/bbc_radio_scotland_fm.isml/bbc_radio_scotland_fm-audio%3d320000.norewind.m3u8"
+      7:
+        name: "BBC Radio Wales"
+        type: stream
+        url: "http://as-hls-ww-live.akamaized.net/pool_97517794/live/ww/bbc_radio_wales_fm/bbc_radio_wales_fm.isml/bbc_radio_wales_fm-audio%3d320000.norewind.m3u8"
+      8:
+        name: "BBC Radio World Service"
+        type: stream
+        url: "http://as-hls-ww-live.akamaized.net/pool_87948813/live/ww/bbc_world_service/bbc_world_service.isml/bbc_world_service-audio%3d320000.norewind.m3u8"
+      9:
+        name: "BBC Radio Three Unwind"
+        type: stream
+        url: "http://as-hls-ww-live.akamaized.net/pool_30624046/live/ww/bbc_radio_three_unwind/bbc_radio_three_unwind.isml/bbc_radio_three_unwind-audio%3d320000.norewind.m3u8"
   6:
-    name: "College Stations"
+    name: "College Radio"
     stations:
-      0: { name: "NYU", url: "STATION_URL" }
-      1: { name: "STATION_NAME", url: "STATION_URL" }
-      2: { name: "STATION_NAME", url: "STATION_URL" }
-      3: { name: "STATION_NAME", url: "STATION_URL" }
-      4: { name: "STATION_NAME", url: "STATION_URL" }
-      5: { name: "STATION_NAME", url: "STATION_URL" }
-      6: { name: "STATION_NAME", url: "STATION_URL" }
-      7: { name: "STATION_NAME", url: "STATION_URL" }
-      8: { name: "STATION_NAME", url: "STATION_URL" }
-      9: { name: "STATION_NAME", url: "STATION_URL" }
+      0:
+        name: "WKCR Columbia"
+        type: stream
+        url: "https://wkcr.streamguys1.com/live"
+      1:
+        name: "WNYU"
+        type: stream
+        url: "http://cinema.acs.its.nyu.edu:8000/wnyu128.mp3"
+      2:
+        name: "WCBN U of Michigan"
+        type: stream
+        url: "https://floyd.wcbn.org:8443/wcbn-hd.mp3"
+      3:
+        name: "KVCU"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      4:
+        name: "WKNC"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      5:
+        name: "KALX"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      6:
+        name: "KCRW"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      7:
+        name: "KUAF"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      8:
+        name: "WIDR FM"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      9:
+        name: "KSPC"
+        type: stream
+        url: "PLACEHOLDER_URL" 
   7:
-    name: "Internet Broadcasts"
+    name: "Ambient"
     stations:
-      0: { name: "STATION_NAME", url: "STATION_URL" }
-      1: { name: "STATION_NAME", url: "STATION_URL" }
-      2: { name: "STATION_NAME", url: "STATION_URL" }
-      3: { name: "STATION_NAME", url: "STATION_URL" }
-      4: { name: "STATION_NAME", url: "STATION_URL" }
-      5: { name: "STATION_NAME", url: "STATION_URL" }
-      6: { name: "STATION_NAME", url: "STATION_URL" }
-      7: { name: "STATION_NAME", url: "STATION_URL" }
-      8: { name: "STATION_NAME", url: "STATION_URL" }
-      9: { name: "STATION_NAME", url: "STATION_URL" }
+      0:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      1:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      2:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      3:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      4:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      5:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      6:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      7:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      8:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL"
+      9:
+        name: "PLACEHOLDER"
+        type: stream
+        url: "PLACEHOLDER_URL" 
   8:
     name: "Grand Theft Auto"
     stations:
@@ -114,15 +351,51 @@ banks:
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
         file: "GTA/GTA_IV_The_Beat.mp3"
-      1: { name: "K-DST The Dust", url: "STATION_URL" }
-      2: { name: "Non-Stop Pop FM", url: "STATION_URL" }
-      3: { name: "Vice City Flash FM", url: "STATION_URL" }
-      4: { name: "GTA V Los Santos Rock Radio", url: "STATION_URL" }
-      5: { name: "San Andreas Radio Los Santos", url: "STATION_URL" }
-      6: { name: "GTA V blonded Los Santos", url: "STATION_URL" }
-      7: { name: "GTA V Rebel Radio", url: "STATION_URL" }
-      8: { name: "San Andreas K-Jah West", url: "STATION_URL" }
-      9: { name: "GTA IV Vladivostok FM", url: "STATION_URL" }
+      1:
+        name: "K-DST The Dust"
+        type: mp3_loop_random_start
+        # play ONE file, seek to a random position, loop forever
+        file: "GTA/GTA_IV_The_Beat.mp3"
+      2:
+        name: "Non-Stop Pop FM"
+        type: mp3_loop_random_start
+        # play ONE file, seek to a random position, loop forever
+        file: "GTA/GTA_IV_The_Beat.mp3"
+      3:
+        name: "Vice City Flash FM"
+        type: mp3_loop_random_start
+        # play ONE file, seek to a random position, loop forever
+        file: "GTA/GTA_IV_The_Beat.mp3"
+      4:
+        name: "GTA V Los Santos Rock Radio"
+        type: mp3_loop_random_start
+        # play ONE file, seek to a random position, loop forever
+        file: "GTA/GTA_IV_The_Beat.mp3"
+      5:
+        name: "San Andreas Radio Los Santos"
+        type: mp3_loop_random_start
+        # play ONE file, seek to a random position, loop forever
+        file: "GTA/GTA_IV_The_Beat.mp3"
+      6:
+        name: "GTA V blonded Los Santos"
+        type: mp3_loop_random_start
+        # play ONE file, seek to a random position, loop forever
+        file: "GTA/GTA_IV_The_Beat.mp3"
+      7:
+        name: "GTA V Rebel Radio"
+        type: mp3_loop_random_start
+        # play ONE file, seek to a random position, loop forever
+        file: "GTA/GTA_IV_The_Beat.mp3"
+      8:
+        name: "San Andreas K-Jah West"
+        type: mp3_loop_random_start
+        # play ONE file, seek to a random position, loop forever
+        file: "GTA/GTA_IV_The_Beat.mp3"
+      9:
+        name: "GTA IV Vladivostok FM"
+        type: mp3_loop_random_start
+        # play ONE file, seek to a random position, loop forever
+        file: "GTA/GTA_IV_The_Beat.mp3"
   9:
     name: "Offline Recordings"
     stations:
@@ -134,16 +407,66 @@ banks:
           - "folder/folder/episode1.mp3"
           - "folder/folder/episode2.mp3"
           - "folder/folder/episode3.mp3"
-      1: { name: "Joe Strummer", url: "STATION_URL" }
-      2: { name: "Willie Nelson", url: "STATION_URL" }
-      3: { name: "Tom Petty", url: "STATION_URL" }
-      4: { name: "Iggy Confidential", url: "STATION_URL" }
-      5: { name: "Jarvis Cocker", url: "STATION_URL" }
-      6: { name: "Paul McCartney Oobu Joobu", url: "STATION_URL" }
-      7: { name: "Elton John Rocket Hour", url: "STATION_URL" }
-      8: { name: "Henry Rollins KCRW Los Angeles", url: "STATION_URL" }
-      9: { name: "BBC 6 Music Artists in Residence", url: "STATION_URL" }
-
-
-
-
+      1:
+        name: "Joe Strummer"
+        type: mp3_random_start_then_in_order
+        items:
+          - "folder/folder/episode1.mp3"
+          - "folder/folder/episode2.mp3"
+          - "folder/folder/episode3.mp3"
+      2:
+        name: "Ultima Thule"
+        type: mp3_random_start_then_in_order
+        items:
+          - "folder/folder/episode1.mp3"
+          - "folder/folder/episode2.mp3"
+          - "folder/folder/episode3.mp3"
+      3:
+        name: "Don Letts Culture Clash"
+        type: mp3_random_start_then_in_order
+        items:
+          - "folder/folder/episode1.mp3"
+          - "folder/folder/episode2.mp3"
+          - "folder/folder/episode3.mp3"
+      4:
+        name: "Iggy Confidential"
+        type: mp3_random_start_then_in_order
+        items:
+          - "folder/folder/episode1.mp3"
+          - "folder/folder/episode2.mp3"
+          - "folder/folder/episode3.mp3"
+      5:
+        name: "Jarvis Cocker"
+        type: mp3_random_start_then_in_order
+        items:
+          - "folder/folder/episode1.mp3"
+          - "folder/folder/episode2.mp3"
+          - "folder/folder/episode3.mp3"
+      6:
+        name: "Paul McCartney Oobu Joobu"
+        type: mp3_random_start_then_in_order
+        items:
+          - "folder/folder/episode1.mp3"
+          - "folder/folder/episode2.mp3"
+          - "folder/folder/episode3.mp3"
+     7:
+        name: "John Peel"
+        type: mp3_random_start_then_in_order
+        items:
+          - "folder/folder/episode1.mp3"
+          - "folder/folder/episode2.mp3"
+          - "folder/folder/episode3.mp3"
+      8:
+        name: "Henry Rollins KCRW Los Angeles"
+        type: mp3_random_start_then_in_order
+        items:
+          - "folder/folder/episode1.mp3"
+          - "folder/folder/episode2.mp3"
+          - "folder/folder/episode3.mp3"
+      9:
+        name: "Hearts of Space"
+        type: mp3_random_start_then_in_order
+        items:
+          - "folder/folder/episode1.mp3"
+          - "folder/folder/episode2.mp3"
+          - "folder/folder/episode3.mp3"
