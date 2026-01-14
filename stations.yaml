@@ -35,7 +35,7 @@ banks:
         type: stream
         url: "PLACEHOLDER_URL"
       8:
-        name: "KCSM"
+        name: "PLACEHOLDER"
         type: stream
         url: "PLACEHOLDER_URL"
       9:
@@ -350,52 +350,52 @@ banks:
         name: "GTA IV The Beat"
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
-        file: "GTA/GTA_IV_The_Beat.mp3"
+        file: "GTA/PLACEHOLDER.mp3"
       1:
         name: "K-DST The Dust"
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
-        file: "GTA/GTA_IV_The_Beat.mp3"
+        file: "GTA/PLACEHOLDER.mp3"
       2:
         name: "Non-Stop Pop FM"
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
-        file: "GTA/GTA_IV_The_Beat.mp3"
+        file: "GTA/PLACEHOLDER.mp3"
       3:
         name: "Vice City Flash FM"
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
-        file: "GTA/GTA_IV_The_Beat.mp3"
+        file: "GTA/PLACEHOLDER.mp3"
       4:
         name: "GTA V Los Santos Rock Radio"
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
-        file: "GTA/GTA_IV_The_Beat.mp3"
+        file: "GTA/PLACEHOLDER.mp3"
       5:
         name: "San Andreas Radio Los Santos"
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
-        file: "GTA/GTA_IV_The_Beat.mp3"
+        file: "GTA/PLACEHOLDER.mp3"
       6:
         name: "GTA V blonded Los Santos"
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
-        file: "GTA/GTA_IV_The_Beat.mp3"
+        file: "GTA/PLACEHOLDER.mp3"
       7:
         name: "GTA V Rebel Radio"
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
-        file: "GTA/GTA_IV_The_Beat.mp3"
+        file: "GTA/PLACEHOLDER.mp3"
       8:
         name: "San Andreas K-Jah West"
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
-        file: "GTA/GTA_IV_The_Beat.mp3"
+        file: "GTA/PLACEHOLDER.mp3"
       9:
         name: "GTA IV Vladivostok FM"
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
-        file: "GTA/GTA_IV_The_Beat.mp3"
+        file: "GTA/PLACEHOLDER.mp3"
   9:
     name: "Offline Recordings"
     stations:
@@ -449,7 +449,7 @@ banks:
           - "folder/folder/episode1.mp3"
           - "folder/folder/episode2.mp3"
           - "folder/folder/episode3.mp3"
-     7:
+      7:
         name: "John Peel"
         type: mp3_random_start_then_in_order
         items:
@@ -470,4 +470,5 @@ banks:
           - "folder/folder/episode1.mp3"
           - "folder/folder/episode2.mp3"
           - "folder/folder/episode3.mp3"
+
 
