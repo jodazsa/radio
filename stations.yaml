@@ -7,82 +7,82 @@ banks:
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       1:
-        name: "PLACEHOLDER"
+        name: "WBGO"
         type: stream
         url: "PLACEHOLDER_URL"
       2:
-        name: "PLACEHOLDER"
+        name: "WDCB"
         type: stream
         url: "PLACEHOLDER_URL"
       3:
-        name: "PLACEHOLDER"
+        name: "KMHD"
         type: stream
         url: "PLACEHOLDER_URL"
       4:
-        name: "PLACEHOLDER"
+        name: "KCSM"
         type: stream
         url: "PLACEHOLDER_URL"
       5:
-        name: "PLACEHOLDER"
+        name: "WKCR"
         type: stream
         url: "PLACEHOLDER_URL"
       6:
-        name: "PLACEHOLDER"
+        name: "KUVO"
         type: stream
         url: "PLACEHOLDER_URL"
       7:
-        name: "PLACEHOLDER"
+        name: "CJRT 91.1 Jazz FM"
         type: stream
         url: "PLACEHOLDER_URL"
       8:
-        name: "PLACEHOLDER"
+        name: "KCSM"
         type: stream
         url: "PLACEHOLDER_URL"
       9:
-        name: "PLACEHOLDER"
+        name: "Czech Jazz"
         type: stream
-        url: "PLACEHOLDER_URL"
+        url: "https://rozhlas.stream/jazz_high.aac"
   1:
     name: "Classical"
     stations:
       0:
-        name: "PLACEHOLDER"
+        name: "WFMT"
         type: stream
         url: "PLACEHOLDER_URL"
       1:
-        name: "PLACEHOLDER"
+        name: "Classic FM - London"
         type: stream
         url: "PLACEHOLDER_URL"
       2:
-        name: "PLACEHOLDER"
+        name: "Radio Classique - France"
         type: stream
         url: "PLACEHOLDER_URL"
       3:
-        name: "PLACEHOLDER"
+        name: "Classic KING FM - Seattle"
         type: stream
         url: "PLACEHOLDER_URL"
       4:
-        name: "PLACEHOLDER"
+        name: "Klassik 1 - Berlin"
         type: stream
-        url: "PLACEHOLDER_URL"
+        url: "http://www.klassik1.de/listen.m3u"
       5:
-        name: "PLACEHOLDER"
+        name: "WQXR"
         type: stream
         url: "PLACEHOLDER_URL"
       6:
-        name: "PLACEHOLDER"
+        name: "KQAC"
         type: stream
         url: "PLACEHOLDER_URL"
       7:
-        name: "PLACEHOLDER"
+        name: "WDAV - Davidson College NC"
         type: stream
         url: "PLACEHOLDER_URL"
       8:
-        name: "PLACEHOLDER"
+        name: "Radio Swiss Classical"
         type: stream
         url: "PLACEHOLDER_URL"
       9:
-        name: "PLACEHOLDER"
+        name: "KVOD - Denver"
         type: stream
         url: "PLACEHOLDER_URL"
   2:
@@ -132,29 +132,29 @@ banks:
     name: "Around the world 1"
     stations:
       0:
-        name: "PLACEHOLDER"
+        name: "La Kalle 96.9"
         type: stream
-        url: "PLACEHOLDER_URL"
+        url: "https://27383.live.streamtheworld.com/LA_KALLE.mp3"
       1:
-        name: "PLACEHOLDER"
+        name: "Los 40 Principales Mexico"
         type: stream
-        url: "PLACEHOLDER_URL"
+        url: "https://26733.live.streamtheworld.com/LOS40_MEXICO.mp3"
       2:
-        name: "PLACEHOLDER"
+        name: "Alpha Boys School Radio - Jamaica"
         type: stream
-        url: "PLACEHOLDER_URL"
+        url: "https://alphaboys-live.streamguys1.com/alphaboys.aac"
       3:
-        name: "PLACEHOLDER"
+        name: "Ashiya - Japan"
         type: stream
-        url: "PLACEHOLDER_URL"
+        url: "https://s3.radio.co/sc8d895604/listen"
       4:
-        name: "PLACEHOLDER"
+        name: "WREP Live - Tokyo"
         type: stream
-        url: "PLACEHOLDER_URL"
+        url: "https://c13.radioboss.fm:8200/stream"
       5:
-        name: "PLACEHOLDER"
+        name: "Radio Eigekai"
         type: stream
-        url: "PLACEHOLDER_URL"
+        url: "http://stream.radiojar.com/66zgtscuc1duv?1768412014"
       6:
         name: "PLACEHOLDER"
         type: stream
@@ -470,3 +470,4 @@ banks:
           - "folder/folder/episode1.mp3"
           - "folder/folder/episode2.mp3"
           - "folder/folder/episode3.mp3"
+
