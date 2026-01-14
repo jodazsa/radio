@@ -48,7 +48,7 @@ banks:
       0:
         name: "WFMT"
         type: stream
-        url: "PLACEHOLDER_URL"
+        url: "https://wfmt.streamguys1.com/main-mp3"
       1:
         name: "Classic FM - London"
         type: stream
@@ -470,6 +470,7 @@ banks:
           - "folder/folder/episode1.mp3"
           - "folder/folder/episode2.mp3"
           - "folder/folder/episode3.mp3"
+
 
 
 
