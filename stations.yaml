@@ -2,7 +2,10 @@ banks:
   0:
     name: "Flyover States"
     stations:
-      0: { name: "KUAF - Fayetteville AR", url: "https://war.streamguys1.com:7031/kuaf1" }
+      0:
+        name: "KUAF - Fayetteville AR"
+        type: stream
+        url: "https://war.streamguys1.com:7031/kuaf1"
       1: { name: "KJAX - Aspen", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/KAJXFMAAC.aac" }
       2: { name: "KEXP - Seattle", url: "STATION_URL" }
       3: { name: "WWOZ - New Orleans", url: "STATION_URL" }
@@ -106,7 +109,11 @@ banks:
   8:
     name: "Grand Theft Auto"
     stations:
-      0: { name: "GTA IV The Beat", url: "STATION_URL" }
+      0:
+        name: "GTA IV The Beat"
+        type: mp3_loop_random_start
+        # play ONE file, seek to a random position, loop forever
+        file: "GTA/GTA_IV_The_Beat.mp3"
       1: { name: "K-DST The Dust", url: "STATION_URL" }
       2: { name: "Non-Stop Pop FM", url: "STATION_URL" }
       3: { name: "Vice City Flash FM", url: "STATION_URL" }
@@ -119,7 +126,14 @@ banks:
   9:
     name: "Offline Recordings"
     stations:
-      0: { name: "Theme Time Radio with Bob Dylan", url: "STATION_URL" }
+      0:
+        name: "Theme Time Radio with Bob Dylan"
+        type: mp3_random_start_then_in_order
+        # choose ONE item randomly each time this station is selected
+        items:
+          - "folder/folder/episode1.mp3"
+          - "folder/folder/episode2.mp3"
+          - "folder/folder/episode3.mp3"
       1: { name: "Joe Strummer", url: "STATION_URL" }
       2: { name: "Willie Nelson", url: "STATION_URL" }
       3: { name: "Tom Petty", url: "STATION_URL" }
@@ -129,6 +143,7 @@ banks:
       7: { name: "Elton John Rocket Hour", url: "STATION_URL" }
       8: { name: "Henry Rollins KCRW Los Angeles", url: "STATION_URL" }
       9: { name: "BBC 6 Music Artists in Residence", url: "STATION_URL" }
+
 
 
 
