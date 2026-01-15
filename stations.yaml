@@ -273,33 +273,33 @@ banks:
         type: stream
         url: "https://floyd.wcbn.org:8443/wcbn-hd.mp3"
       3:
-        name: "KVCU"
+        name: "KVCU CU Boulder"
         type: stream
-        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
+        url: "https://kvcu.streamguys1.com/live"
       4:
-        name: "WKNC"
+        name: "WKNC NC State Raleigh"
         type: stream
-        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
+        url: "https://das-edge14-live365-dal02.cdnstream.com/a45877"
       5:
-        name: "KALX"
+        name: "KALX UC Berkeley"
         type: stream
-        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
+        url: "https://stream.kalx.berkeley.edu:8443/kalx-128.mp3"
       6:
-        name: "KCRW"
+        name: "KCRW Santa Monica College"
         type: stream
-        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
+        url: "https://streams.kcrw.com/kcrw_mp3"
       7:
-        name: "KUAF"
+        name: "KUAF U of A Fayetteville"
         type: stream
-        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
+        url: "https://war.streamguys1.com:7031/kuaf1"
       8:
-        name: "WIDR FM"
+        name: "WIDR FM Western Michigan University in Kalamazoo"
         type: stream
-        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
+        url: "https://widrfm.net/stream"
       9:
-        name: "KSPC"
+        name: "KSPC Claremont Colleges"
         type: stream
-        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3" 
+        url: "https://kspc.radioca.st/stream"
   7:
     name: "Ambient"
     stations:
@@ -470,6 +470,7 @@ banks:
           - "folder/folder/episode1.mp3"
           - "folder/folder/episode2.mp3"
           - "folder/folder/episode3.mp3"
+
 
 
 
