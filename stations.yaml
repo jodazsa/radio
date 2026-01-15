@@ -347,55 +347,55 @@ banks:
     name: "Grand Theft Auto"
     stations:
       0:
-        name: "GTA IV The Beat"
+        name: "FlyLo FM"
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
-        file: "GTA/CREATIVE NAME.mp3"
+        file: "GTA/FlyLo FM [GTA V].mp3"
       1:
-        name: "K-DST The Dust"
+        name: "Fusion FM"
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
-        file: "GTA/CREATIVE NAME.mp3"
+        file: "GTA/Fusion FM - GTA IV Radio [wKLevo2UFaI].mp3"
       2:
-        name: "Non-Stop Pop FM"
+        name: "Los Santos Rock Radio"
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
-        file: "GTA/CREATIVE NAME.mp3"
+        file: "GTA/Gta 5 - Los Santos Rock Radio (All Songs).mp3"
       3:
-        name: "Vice City Flash FM"
+        name: "MSX FM"
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
-        file: "GTA/CREATIVE NAME.mp3"
+        file: "GTA/GTA III (GTA 3) - MSX FM ｜ Full radio.mp3"
       4:
-        name: "GTA V Los Santos Rock Radio"
+        name: "Jazz Nation Radio"
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
-        file: "GTA/CREATIVE NAME.mp3"
+        file: "GTA/GTA IV — Jazz Nation Radio 108.5 ｜ Full radio station [3K51DawYRwI].mp3"
       5:
-        name: "San Andreas Radio Los Santos"
+        name: "K-DST"
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
-        file: "GTA/CREATIVE NAME.mp3"
+        file: "GTA/GTA Sa K-DST Full Radio Station.mp3"
       6:
-        name: "GTA V blonded Los Santos"
+        name: "K Rose"
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
-        file: "GTA/CREATIVE NAME.mp3"
+        file: "GTA/GTA San Andreas： K Rose Full Station.mp3"
       7:
-        name: "GTA V Rebel Radio"
+        name: "Blue Ark Radio"
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
-        file: "GTA/CREATIVE NAME.mp3"
+        file: "GTA/GTA V - The Blue Ark radio station.mp3"
       8:
-        name: "San Andreas K-Jah West"
+        name: "K-JAH Radio"
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
-        file: "GTA/CREATIVE NAME.mp3"
+        file: "GTA/GTA3 K-JAH radio (Full version).mp3"
       9:
-        name: "GTA IV Vladivostok FM"
+        name: "Non-Stop Pop"
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
-        file: "GTA/CREATIVE NAME.mp3"
+        file: "GTA/Non Stop Pop FM Hosted by Cara Delevingne Grand Theft Auto V  Pop, R&B, Dance pop Music Mix [SHhZTEL-0sA].mp3"
   9:
     name: "Offline Recordings"
     stations:
@@ -470,6 +470,7 @@ banks:
           - "folder/folder/episode1.mp3"
           - "folder/folder/episode2.mp3"
           - "folder/folder/episode3.mp3"
+
 
 
 
