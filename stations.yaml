@@ -52,15 +52,15 @@ banks:
       1:
         name: "Classic FM - London"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       2:
         name: "Radio Classique - France"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       3:
         name: "Classic KING FM - Seattle"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       4:
         name: "Klassik 1 - Berlin"
         type: stream
@@ -68,66 +68,66 @@ banks:
       5:
         name: "WQXR"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       6:
         name: "KQAC"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       7:
         name: "WDAV - Davidson College NC"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       8:
         name: "Radio Swiss Classical"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       9:
         name: "KVOD - Denver"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
   2:
     name: "Around the US"
     stations:
       0:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       1:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       2:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       3:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       4:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       5:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       6:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       7:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       8:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       9:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
   3:
     name: "Around the world 1"
     stations:
@@ -158,62 +158,62 @@ banks:
       6:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       7:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       8:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       9:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
   4:
     name: "Around the world 2"
     stations:
       0:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       1:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       2:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       3:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       4:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       5:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       6:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       7:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       8:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       9:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
   5:
     name: "BBC"
     stations:
@@ -275,74 +275,74 @@ banks:
       3:
         name: "KVCU"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       4:
         name: "WKNC"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       5:
         name: "KALX"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       6:
         name: "KCRW"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       7:
         name: "KUAF"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       8:
         name: "WIDR FM"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       9:
         name: "KSPC"
         type: stream
-        url: "http://PLACEHOLDER.mp3" 
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3" 
   7:
     name: "Ambient"
     stations:
       0:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       1:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       2:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       3:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       4:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       5:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       6:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       7:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       8:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3"
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       9:
         name: "PLACEHOLDER"
         type: stream
-        url: "http://PLACEHOLDER.mp3" 
+        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3" 
   8:
     name: "Grand Theft Auto"
     stations:
@@ -470,6 +470,7 @@ banks:
           - "folder/folder/episode1.mp3"
           - "folder/folder/episode2.mp3"
           - "folder/folder/episode3.mp3"
+
 
 
 
