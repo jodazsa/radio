@@ -89,11 +89,11 @@ banks:
     name: "Around the US"
     stations:
       0:
-        name: "CREATIVE NAME"
+        name: "John FM"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       1:
-        name: "CREATIVE NAME"
+        name: "John AM"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       2:
@@ -470,6 +470,7 @@ banks:
           - "folder/folder/episode1.mp3"
           - "folder/folder/episode2.mp3"
           - "folder/folder/episode3.mp3"
+
 
 
 
