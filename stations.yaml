@@ -17,15 +17,15 @@ banks:
       3:
         name: "KMHD"
         type: stream
-        url: "https://ais-sa3.cdnstream1.com/2442_128.aac/playlist.m3u8?kmhd"
+        url: "https://ais-sa3.cdnstream1.com/2442_128.aac/playlist.m3u8"
       4:
         name: "KCSM"
         type: stream
-        url: "https://ice7.securenetsystems.net/KCSM2?uuid=ekbjjl52"
+        url: "https://ice7.securenetsystems.net/KCSM2"
       5:
         name: "WPFW"
         type: stream
-        url: "https://streams.pacifica.org:9000/wpfw_128?t=1768428919225"
+        url: "https://streams.pacifica.org:9000/wpfw_128"
       6:
         name: "KUVO"
         type: stream
@@ -68,7 +68,7 @@ banks:
       5:
         name: "WQXR"
         type: stream
-        url: "https://stream.wqxr.org/wqxr-web?nyprBrowserId=409ef459b799d800"
+        url: "https://stream.wqxr.org/wqxr-web"
       6:
         name: "KQAC"
         type: stream
@@ -119,7 +119,7 @@ banks:
       7:
         name: "WMOT 89.5 Middle Tennessee"
         type: stream
-        url: "https://26443.live.streamtheworld.com/WMOTFM.mp3?uuid=foqozj98"
+        url: "https://26443.live.streamtheworld.com/WMOTFM.mp3"
       8:
         name: "CREATIVE NAME"
         type: stream
@@ -470,6 +470,7 @@ banks:
           - "folder/folder/episode1.mp3"
           - "folder/folder/episode2.mp3"
           - "folder/folder/episode3.mp3"
+
 
 
 
