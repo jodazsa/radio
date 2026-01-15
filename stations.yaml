@@ -89,43 +89,43 @@ banks:
     name: "Around the US"
     stations:
       0:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       1:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       2:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       3:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       4:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       5:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       6:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       7:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       8:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       9:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
   3:
@@ -156,62 +156,62 @@ banks:
         type: stream
         url: "http://stream.radiojar.com/66zgtscuc1duv?1768412014"
       6:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       7:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       8:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       9:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
   4:
     name: "Around the world 2"
     stations:
       0:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       1:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       2:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       3:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       4:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       5:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       6:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       7:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       8:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       9:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
   5:
@@ -304,43 +304,43 @@ banks:
     name: "Ambient"
     stations:
       0:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       1:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       2:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       3:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       4:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       5:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       6:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       7:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       8:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       9:
-        name: "PLACEHOLDER"
+        name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3" 
   8:
@@ -350,52 +350,52 @@ banks:
         name: "GTA IV The Beat"
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
-        file: "GTA/PLACEHOLDER.mp3"
+        file: "GTA/CREATIVE NAME.mp3"
       1:
         name: "K-DST The Dust"
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
-        file: "GTA/PLACEHOLDER.mp3"
+        file: "GTA/CREATIVE NAME.mp3"
       2:
         name: "Non-Stop Pop FM"
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
-        file: "GTA/PLACEHOLDER.mp3"
+        file: "GTA/CREATIVE NAME.mp3"
       3:
         name: "Vice City Flash FM"
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
-        file: "GTA/PLACEHOLDER.mp3"
+        file: "GTA/CREATIVE NAME.mp3"
       4:
         name: "GTA V Los Santos Rock Radio"
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
-        file: "GTA/PLACEHOLDER.mp3"
+        file: "GTA/CREATIVE NAME.mp3"
       5:
         name: "San Andreas Radio Los Santos"
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
-        file: "GTA/PLACEHOLDER.mp3"
+        file: "GTA/CREATIVE NAME.mp3"
       6:
         name: "GTA V blonded Los Santos"
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
-        file: "GTA/PLACEHOLDER.mp3"
+        file: "GTA/CREATIVE NAME.mp3"
       7:
         name: "GTA V Rebel Radio"
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
-        file: "GTA/PLACEHOLDER.mp3"
+        file: "GTA/CREATIVE NAME.mp3"
       8:
         name: "San Andreas K-Jah West"
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
-        file: "GTA/PLACEHOLDER.mp3"
+        file: "GTA/CREATIVE NAME.mp3"
       9:
         name: "GTA IV Vladivostok FM"
         type: mp3_loop_random_start
         # play ONE file, seek to a random position, loop forever
-        file: "GTA/PLACEHOLDER.mp3"
+        file: "GTA/CREATIVE NAME.mp3"
   9:
     name: "Offline Recordings"
     stations:
@@ -470,6 +470,7 @@ banks:
           - "folder/folder/episode1.mp3"
           - "folder/folder/episode2.mp3"
           - "folder/folder/episode3.mp3"
+
 
 
 
