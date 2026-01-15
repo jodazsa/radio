@@ -89,37 +89,37 @@ banks:
     name: "Around the US"
     stations:
       0:
-        name: "John FM"
+        name: "WQXR Memphis 91.7 FM"
         type: stream
-        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
+        url: "https://crosstown.streamguys1.com/live-website-aac"
       1:
-        name: "John AM"
+        name: "SoCal Sound 88.5 FM"
         type: stream
-        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
+        url: "https://www.streamvortex.com:8444/s/12200/"
       2:
-        name: "CREATIVE NAME"
+        name: "KEXP Seattle 90.3 FM"
         type: stream
-        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
+        url: "https://kexp-mp3-128.streamguys1.com/kexp128.mp3"
       3:
-        name: "CREATIVE NAME"
+        name: "WPKN Bridgeport, Connecticut 89.5"
         type: stream
-        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
+        url: "https://ice25.securenetsystems.net/WPKN"
       4:
-        name: "CREATIVE NAME"
+        name: "Hot 97 NYC"
         type: stream
-        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
+        url: "https://27253.live.streamtheworld.com/WQHTFMAAC.aac"
       5:
         name: "CREATIVE NAME"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       6:
-        name: "CREATIVE NAME"
+        name: "WDVX 89.9 Knoxville"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       7:
-        name: "CREATIVE NAME"
+        name: "WMOT 89.5 Middle Tennessee"
         type: stream
-        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
+        url: "https://26443.live.streamtheworld.com/WMOTFM.mp3?uuid=foqozj98"
       8:
         name: "CREATIVE NAME"
         type: stream
@@ -156,9 +156,9 @@ banks:
         type: stream
         url: "http://stream.radiojar.com/66zgtscuc1duv?1768412014"
       6:
-        name: "CREATIVE NAME"
+        name: "Red Dirt Radio - Australia"
         type: stream
-        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
+        url: "https://az1.syd2.hostyourservices.au:8010/magic876"
       7:
         name: "CREATIVE NAME"
         type: stream
@@ -470,6 +470,7 @@ banks:
           - "folder/folder/episode1.mp3"
           - "folder/folder/episode2.mp3"
           - "folder/folder/episode3.mp3"
+
 
 
 
