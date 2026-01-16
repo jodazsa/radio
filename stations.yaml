@@ -2,7 +2,7 @@
 # NOTE ON PLACEHOLDERS!
 #  I used the URL of WWOZ (http://wwoz-sc.streamguys.com/wwoz-hi.mp3) as a placeholder.
 #  I used "CREATIVE NAME" as a placeholder station name
-#
+#  For other options, see 
 banks:
   0:
     name: "Jazz"
@@ -114,9 +114,9 @@ banks:
         type: stream
         url: "https://27253.live.streamtheworld.com/WQHTFMAAC.aac"
       5:
-        name: "CREATIVE NAME"
+        name: "Iowa Public Radio"
         type: stream
-        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
+        url: "https://studioone-stream.iowapublicradio.org/StudioOne.mp3"
       6:
         name: "WDVX 89.9 Knoxville"
         type: stream
@@ -126,11 +126,11 @@ banks:
         type: stream
         url: "https://26443.live.streamtheworld.com/WMOTFM.mp3"
       8:
-        name: "CREATIVE NAME"
+        name: "WFMU 91.1 Hudsdon Valley"
         type: stream
-        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
+        url: "https://stream0.wfmu.org/freeform-128k.mp3"
       9:
-        name: "CREATIVE NAME"
+        name: "WFUV Fordham University"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
   3:
@@ -475,6 +475,7 @@ banks:
           - "folder/folder/episode1.mp3"
           - "folder/folder/episode2.mp3"
           - "folder/folder/episode3.mp3"
+
 
 
 
