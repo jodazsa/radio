@@ -309,7 +309,7 @@ banks:
     name: "Ambient"
     stations:
       0:
-        name: "CREATIVE NAME"
+        name: "Mission Control - Soma FM"
         type: stream
         url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
       1:
@@ -475,6 +475,7 @@ banks:
           - "folder/folder/episode1.mp3"
           - "folder/folder/episode2.mp3"
           - "folder/folder/episode3.mp3"
+
 
 
 
