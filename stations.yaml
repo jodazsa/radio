@@ -120,7 +120,7 @@ banks:
       6:
         name: "WDVX 89.9 Knoxville"
         type: stream
-        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
+        url: "https://wdvx.streamguys1.com/live"
       7:
         name: "WMOT 89.5 Middle Tennessee"
         type: stream
@@ -132,7 +132,7 @@ banks:
       9:
         name: "WFUV Fordham University"
         type: stream
-        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
+        url: "https://onair.wfuv.org/onair-aacplus"
   3:
     name: "Around the world 1"
     stations:
@@ -165,9 +165,9 @@ banks:
         type: stream
         url: "https://az1.syd2.hostyourservices.au:8010/magic876"
       7:
-        name: "CREATIVE NAME"
+        name: "Punk Radio Underground Poland"
         type: stream
-        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3"
+        url: "https://s1.slotex.pl:7604/stream/1/"
       8:
         name: "CREATIVE NAME"
         type: stream
@@ -475,6 +475,7 @@ banks:
           - "folder/folder/episode1.mp3"
           - "folder/folder/episode2.mp3"
           - "folder/folder/episode3.mp3"
+
 
 
 
