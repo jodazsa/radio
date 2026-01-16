@@ -1,3 +1,8 @@
+# 
+# NOTE ON PLACEHOLDERS!
+#  I used the URL of WWOZ (http://wwoz-sc.streamguys.com/wwoz-hi.mp3) as a placeholder.
+#  I used "CREATIVE NAME" as a placeholder station name
+#
 banks:
   0:
     name: "Jazz"
@@ -470,6 +475,7 @@ banks:
           - "folder/folder/episode1.mp3"
           - "folder/folder/episode2.mp3"
           - "folder/folder/episode3.mp3"
+
 
 
 
