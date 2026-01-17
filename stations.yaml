@@ -70,6 +70,7 @@ banks:
         name: "Klassik 1 - Berlin"
         type: stream
         url: "http://www.klassik1.de/listen.m3u"
+        # NOT WORKING?
       5:
         name: "WQXR"
         type: stream
@@ -90,6 +91,7 @@ banks:
         name: "KVOD - Denver"
         type: stream
         url: "https://stream1.cprnetwork.org/cpr2_lo"
+        # PLAYS AD FIRST
   2:
     name: "Around the US"
     stations:
@@ -113,6 +115,7 @@ banks:
         name: "Hot 97 NYC"
         type: stream
         url: "https://27253.live.streamtheworld.com/WQHTFMAAC.aac"
+        # PLAYS AD FIRST
       5:
         name: "Iowa Public Radio"
         type: stream
@@ -121,6 +124,7 @@ banks:
         name: "WDVX 89.9 Knoxville"
         type: stream
         url: "https://wdvx.streamguys1.com/live"
+        # QUIET
       7:
         name: "WMOT 89.5 Middle Tennessee"
         type: stream
@@ -133,6 +137,7 @@ banks:
         name: "WFUV Fordham University"
         type: stream
         url: "https://onair.wfuv.org/onair-aacplus"
+        # PLAYS AD FIRST
   3:
     name: "Around the world 1"
     stations:
@@ -475,6 +480,7 @@ banks:
           - "folder/folder/episode1.mp3"
           - "folder/folder/episode2.mp3"
           - "folder/folder/episode3.mp3"
+
 
 
 
