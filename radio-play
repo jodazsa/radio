@@ -1,0 +1,168 @@
+#!/usr/bin/env python3
+"""
+radio-play: Internet radio station player for Raspberry Pi
+Usage: radio-play <bank> <station>
+Example: radio-play 3 4
+"""
+
+import sys
+import yaml
+import subprocess
+import os
+import random
+from pathlib import Path
+
+# Configuration
+YAML_FILE = "/home/radio/stations.yaml"
+AUDIO_BASE_DIR = "/home/radio/audio"
+
+def load_stations():
+    """Load and parse the stations YAML file"""
+    try:
+        with open(YAML_FILE, 'r') as f:
+            data = yaml.safe_load(f)
+        return data['banks']
+    except FileNotFoundError:
+        print(f"Error: Stations file not found at {YAML_FILE}")
+        sys.exit(1)
+    except yaml.YAMLError as e:
+        print(f"Error parsing YAML file: {e}")
+        sys.exit(1)
+
+def stop_all_playback():
+    """Stop any currently playing audio (MPD and MPV)"""
+    # Stop MPD
+    subprocess.run(['mpc', 'stop'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.run(['mpc', 'clear'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    
+    # Kill any running MPV processes
+    subprocess.run(['pkill', '-9', 'mpv'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+def play_stream(url):
+    """Play an internet radio stream using MPD"""
+    subprocess.run(['mpc', 'clear'], check=True)
+    subprocess.run(['mpc', 'add', url], check=True)
+    subprocess.run(['mpc', 'play'], check=True)
+
+def play_mp3_loop_random_start(filepath):
+    """Play a single MP3 file, starting at a random position, looping forever"""
+    full_path = os.path.join(AUDIO_BASE_DIR, filepath)
+    
+    if not os.path.exists(full_path):
+        print(f"Error: Audio file not found: {full_path}")
+        sys.exit(1)
+    
+    # Get file duration to calculate random start position
+    try:
+        result = subprocess.run(
+            ['ffprobe', '-v', 'error', '-show_entries', 'format=duration', 
+             '-of', 'default=noprint_wrappers=1:nokey=1', full_path],
+            capture_output=True, text=True, check=True
+        )
+        duration = float(result.stdout.strip())
+        start_pos = random.uniform(0, duration)
+    except (subprocess.CalledProcessError, ValueError):
+        # If we can't get duration, just start from beginning
+        start_pos = 0
+    
+    # Play with MPV in loop mode, starting at random position
+    subprocess.Popen([
+        'mpv',
+        '--no-video',
+        '--loop=inf',
+        f'--start={start_pos}',
+        '--audio-device=alsa/hw:0,0',
+        full_path
+    ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+def play_mp3_dir_random_start_then_in_order(dirpath):
+    """Play files from a directory: random start, then continue in order, looping"""
+    full_path = os.path.join(AUDIO_BASE_DIR, dirpath)
+    
+    if not os.path.exists(full_path):
+        print(f"Error: Audio directory not found: {full_path}")
+        sys.exit(1)
+    
+    # Get all MP3 files in directory
+    mp3_files = sorted([f for f in os.listdir(full_path) if f.lower().endswith('.mp3')])
+    
+    if not mp3_files:
+        print(f"Error: No MP3 files found in {full_path}")
+        sys.exit(1)
+    
+    # Choose random starting file
+    start_file = random.choice(mp3_files)
+    start_index = mp3_files.index(start_file)
+    
+    # Reorder list to start with random file, then continue in order
+    ordered_files = mp3_files[start_index:] + mp3_files[:start_index]
+    full_paths = [os.path.join(full_path, f) for f in ordered_files]
+    
+    # Create a temporary playlist
+    playlist_file = '/tmp/radio-playlist.m3u'
+    with open(playlist_file, 'w') as f:
+        for path in full_paths:
+            f.write(f"{path}\n")
+    
+    # Play playlist with MPV in loop mode
+    subprocess.Popen([
+        'mpv',
+        '--no-video',
+        '--loop-playlist=inf',
+        '--audio-device=alsa/hw:0,0',
+        f'--playlist={playlist_file}'
+    ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+def main():
+    if len(sys.argv) != 3:
+        print("Usage: radio-play <bank> <station>")
+        print("Example: radio-play 3 4")
+        sys.exit(1)
+    
+    try:
+        bank_num = int(sys.argv[1])
+        station_num = int(sys.argv[2])
+    except ValueError:
+        print("Error: Bank and station must be numbers")
+        sys.exit(1)
+    
+    # Load stations
+    banks = load_stations()
+    
+    # Validate bank number
+    if bank_num not in banks:
+        print(f"Error: Bank {bank_num} not found")
+        print(f"Available banks: {', '.join(map(str, sorted(banks.keys())))}")
+        sys.exit(1)
+    
+    bank = banks[bank_num]
+    
+    # Validate station number
+    if station_num not in bank['stations']:
+        print(f"Error: Station {station_num} not found in bank {bank_num} ({bank['name']})")
+        print(f"Available stations: {', '.join(map(str, sorted(bank['stations'].keys())))}")
+        sys.exit(1)
+    
+    station = bank['stations'][station_num]
+    
+    # Stop any currently playing audio
+    stop_all_playback()
+    
+    # Display what we're playing
+    print(f"Playing: {bank['name']} - {station['name']}")
+    
+    # Play based on type
+    station_type = station['type']
+    
+    if station_type == 'stream':
+        play_stream(station['url'])
+    elif station_type == 'mp3_loop_random_start':
+        play_mp3_loop_random_start(station['file'])
+    elif station_type == 'mp3_dir_random_start_then_in_order':
+        play_mp3_dir_random_start_then_in_order(station['dir'])
+    else:
+        print(f"Error: Unknown station type: {station_type}")
+        sys.exit(1)
+
+if __name__ == '__main__':
+    main()
