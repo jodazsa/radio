@@ -12,10 +12,29 @@ import os
 import random
 from pathlib import Path
 
+# Load configuration
+CONFIG_FILE = "/home/radio/hardware-config.yaml"
+
+def load_config():
+    """Load hardware configuration"""
+    try:
+        with open(CONFIG_FILE, 'r') as f:
+            return yaml.safe_load(f)
+    except:
+        # Fallback to defaults if config not found
+        return {
+            'audio': {'card': 1, 'device': 0},
+            'audio_processing': {'mono_downmix': True}
+        }
+
+config = load_config()
+
 # Configuration
 YAML_FILE = "/home/radio/stations.yaml"
 AUDIO_BASE_DIR = "/home/radio/audio"
-MPV_VOLUME = 60  # MPV playback volume (0-100), helps balance with stream volume
+AUDIO_CARD = config['audio']['card']
+AUDIO_DEVICE = config['audio']['device']
+MONO_DOWNMIX = config['audio_processing']['mono_downmix']
 
 def load_stations():
     """Load and parse the stations YAML file"""
@@ -31,13 +50,9 @@ def load_stations():
         sys.exit(1)
 
 def stop_all_playback():
-    """Stop any currently playing audio (MPD and MPV)"""
-    # Stop MPD
+    """Stop MPD playback"""
     subprocess.run(['mpc', 'stop'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     subprocess.run(['mpc', 'clear'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    
-    # Kill any running MPV processes
-    subprocess.run(['pkill', '-9', 'mpv'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def play_stream(url):
     """Play an internet radio stream using MPD"""
@@ -46,79 +61,101 @@ def play_stream(url):
     subprocess.run(['mpc', 'play'], check=True)
 
 def play_mp3_loop_random_start(filepath):
-    """Play a single MP3 file, starting at a random position, looping forever"""
+    """Play a single MP3 file with MPD, starting at a random position, looping forever"""
     full_path = os.path.join(AUDIO_BASE_DIR, filepath)
     
     if not os.path.exists(full_path):
         print(f"Error: Audio file not found: {full_path}")
         sys.exit(1)
     
-    # Get file duration to calculate random start position
-    try:
-        result = subprocess.run(
-            ['ffprobe', '-v', 'error', '-show_entries', 'format=duration', 
-             '-of', 'default=noprint_wrappers=1:nokey=1', full_path],
-            capture_output=True, text=True, check=True
-        )
-        duration = float(result.stdout.strip())
-        start_pos = random.uniform(0, duration)
-    except (subprocess.CalledProcessError, ValueError):
-        # If we can't get duration, just start from beginning
-        start_pos = 0
+    print(f"Playing file loop: {filepath}")
     
-    # Play with MPV in loop mode, starting at random position
-    subprocess.Popen([
-        'mpv',
-        '--no-video',
-        '--loop=inf',
-        f'--volume={MPV_VOLUME}',
-        f'--start={start_pos}',
-        '--audio-device=alsa/hw:1,0',
-        '--audio-channels=mono',
-        '--input-ipc-server=/tmp/mpv-socket',
-        full_path
-    ])
+    # Clear playlist and add file
+    subprocess.run(['mpc', 'clear'], check=True)
+    subprocess.run(['mpc', 'add', full_path], check=True)
+    
+    # Enable repeat mode for looping
+    subprocess.run(['mpc', 'repeat', 'on'], check=True)
+    
+    # Start playback
+    subprocess.run(['mpc', 'play'], check=True)
+    
+    # Get file duration and seek to random position
+    try:
+        # Let it start playing, then get status
+        import time
+        time.sleep(0.5)
+        
+        result = subprocess.run(['mpc', 'status'], capture_output=True, text=True)
+        status = result.stdout
+        
+        # Parse duration from status line like "[playing] #1/1   0:05/3:47 (2%)"
+        for line in status.split('\n'):
+            if '/' in line and ':' in line:
+                # Look for time format like "0:05/3:47"
+                parts = line.split()
+                for part in parts:
+                    if '/' in part and ':' in part:
+                        # Extract total time (after the /)
+                        current, total = part.split('/')
+                        
+                        # Parse total time (e.g., "3:47")
+                        time_parts = total.split(':')
+                        if len(time_parts) == 2:
+                            minutes, seconds = int(time_parts[0]), int(time_parts[1])
+                            total_seconds = minutes * 60 + seconds
+                            
+                            # Seek to random position (up to 90% through to avoid end)
+                            random_pos = random.randint(0, int(total_seconds * 0.9))
+                            seek_minutes = random_pos // 60
+                            seek_seconds = random_pos % 60
+                            seek_time = f"{seek_minutes}:{seek_seconds:02d}"
+                            
+                            print(f"Seeking to random position: {seek_time}")
+                            subprocess.run(['mpc', 'seek', seek_time])
+                            break
+    except Exception as e:
+        print(f"Warning: Could not seek to random position: {e}")
 
 def play_mp3_dir_random_start_then_in_order(dirpath):
-    """Play files from a directory: random start, then continue in order, looping"""
+    """Play files from a directory with MPD: random start, then continue in order, looping"""
     full_path = os.path.join(AUDIO_BASE_DIR, dirpath)
     
     if not os.path.exists(full_path):
         print(f"Error: Audio directory not found: {full_path}")
         sys.exit(1)
     
-    # Get all MP3 files in directory
-    mp3_files = sorted([f for f in os.listdir(full_path) if f.lower().endswith('.mp3')])
+    # Get all MP3 files in directory (and other audio formats)
+    audio_extensions = {'.mp3', '.flac', '.ogg', '.m4a', '.wav'}
+    audio_files = sorted([
+        os.path.join(full_path, f) for f in os.listdir(full_path)
+        if os.path.isfile(os.path.join(full_path, f)) and 
+        os.path.splitext(f)[1].lower() in audio_extensions
+    ])
     
-    if not mp3_files:
-        print(f"Error: No MP3 files found in {full_path}")
+    if not audio_files:
+        print(f"Error: No audio files found in {full_path}")
         sys.exit(1)
     
-    # Choose random starting file
-    start_file = random.choice(mp3_files)
-    start_index = mp3_files.index(start_file)
+    print(f"Playing directory: {dirpath} ({len(audio_files)} files)")
     
-    # Reorder list to start with random file, then continue in order
-    ordered_files = mp3_files[start_index:] + mp3_files[:start_index]
-    full_paths = [os.path.join(full_path, f) for f in ordered_files]
+    # Pick a random starting file
+    start_index = random.randint(0, len(audio_files) - 1)
     
-    # Create a temporary playlist
-    playlist_file = '/tmp/radio-playlist.m3u'
-    with open(playlist_file, 'w') as f:
-        for path in full_paths:
-            f.write(f"{path}\n")
+    # Create playlist: starting file + all others in order
+    playlist = audio_files[start_index:] + audio_files[:start_index]
     
-    # Play playlist with MPV in loop mode
-    subprocess.Popen([
-        'mpv',
-        '--no-video',
-        '--loop-playlist=inf',
-        f'--volume={MPV_VOLUME}',
-        '--audio-device=alsa/hw:1,0',
-        '--audio-channels=mono',
-        '--input-ipc-server=/tmp/mpv-socket',
-        f'--playlist={playlist_file}'
-    ])
+    # Clear and build playlist in MPD
+    subprocess.run(['mpc', 'clear'], check=True)
+    for audio_file in playlist:
+        subprocess.run(['mpc', 'add', audio_file], 
+                      stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    
+    # Enable repeat mode to loop through all files
+    subprocess.run(['mpc', 'repeat', 'on'], check=True)
+    
+    # Start playback
+    subprocess.run(['mpc', 'play'], check=True)
 
 def main():
     if len(sys.argv) != 3:
@@ -151,6 +188,27 @@ def main():
         sys.exit(1)
     
     station = bank['stations'][station_num]
+    
+    # Check if we're already playing this exact station
+    # This prevents unnecessary restarts when switch wiggles on same position
+    state_file = "/home/radio/.radio-state"
+    try:
+        if os.path.exists(state_file):
+            with open(state_file, 'r') as f:
+                current_bank = None
+                current_station = None
+                for line in f:
+                    if line.startswith('current_bank='):
+                        current_bank = int(line.split('=')[1].strip())
+                    elif line.startswith('current_station='):
+                        current_station = int(line.split('=')[1].strip())
+                
+                if current_bank == bank_num and current_station == station_num:
+                    print(f"Already playing: {bank['name']} - {station['name']}")
+                    print("(Not restarting)")
+                    sys.exit(0)
+    except:
+        pass  # If state check fails, just continue to play
     
     # Stop any currently playing audio
     stop_all_playback()
