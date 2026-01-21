@@ -1,0 +1,74 @@
+#!/usr/bin/env python3
+"""
+radio-status: Display currently playing station
+"""
+
+import yaml
+import os
+import subprocess
+
+STATE_FILE = "/home/radio/.radio-state"
+YAML_FILE = "/home/radio/stations.yaml"
+
+def load_state():
+    """Load current bank and station from state file"""
+    bank = 0
+    station = 0
+    try:
+        if os.path.exists(STATE_FILE):
+            with open(STATE_FILE, 'r') as f:
+                for line in f:
+                    if line.startswith('current_bank='):
+                        bank = int(line.split('=')[1].strip())
+                    elif line.startswith('current_station='):
+                        station = int(line.split('=')[1].strip())
+    except:
+        pass
+    return bank, station
+
+def load_stations():
+    """Load stations from YAML"""
+    try:
+        with open(YAML_FILE, 'r') as f:
+            data = yaml.safe_load(f)
+        return data['banks']
+    except:
+        return {}
+
+def is_playing():
+    """Check if anything is playing"""
+    # Check MPD
+    result = subprocess.run(['mpc', 'status'], capture_output=True, text=True)
+    mpd_playing = '[playing]' in result.stdout
+    
+    # Check MPV
+    result = subprocess.run(['pgrep', 'mpv'], capture_output=True)
+    mpv_playing = result.returncode == 0
+    
+    return mpd_playing or mpv_playing
+
+def main():
+    bank_num, station_num = load_state()
+    banks = load_stations()
+    
+    if not is_playing():
+        print("Nothing currently playing")
+        return
+    
+    if bank_num in banks and station_num in banks[bank_num]['stations']:
+        bank = banks[bank_num]
+        station = banks[bank_num]['stations'][station_num]
+        print(f"Bank {bank_num}: {bank['name']}")
+        print(f"Station {station_num}: {station['name']}")
+        
+        # Get volume
+        result = subprocess.run(['mpc', 'volume'], capture_output=True, text=True)
+        if 'volume:' in result.stdout:
+            vol = result.stdout.split(':')[1].strip()
+            print(f"Volume: {vol}")
+    else:
+        print(f"Bank {bank_num}, Station {station_num}")
+        print("(Station info not found in YAML)")
+
+if __name__ == '__main__':
+    main()
