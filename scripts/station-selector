@@ -81,6 +81,9 @@ def main():
     for pin in BCD_PINS:
         GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     
+    # Give GPIO time to stabilize
+    time.sleep(0.5)
+    
     print("Starting station selector...")
     
     # Load current state
