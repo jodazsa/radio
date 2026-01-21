@@ -15,7 +15,7 @@ from pathlib import Path
 # Configuration
 YAML_FILE = "/home/radio/stations.yaml"
 AUDIO_BASE_DIR = "/home/radio/audio"
-MPV_VOLUME = 70  # MPV playback volume (0-100), helps balance with stream volume
+MPV_VOLUME = 60  # MPV playback volume (0-100), balance with stream volume
 
 def load_stations():
     """Load and parse the stations YAML file"""
