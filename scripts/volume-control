@@ -2,11 +2,13 @@
 """
 volume-control: Monitor rotary encoder and control system volume
 Controls both MPD (streams) and hardware volume (MPV/everything)
+Button press toggles play/pause
 """
 
 import board
 from adafruit_seesaw.seesaw import Seesaw
 from adafruit_seesaw.rotaryio import IncrementalEncoder
+from digitalio import Direction
 import subprocess
 import time
 import signal
@@ -16,8 +18,9 @@ import sys
 ENCODER_ADDR = 0x36
 VOLUME_STEP = 4  # How much to change volume per encoder click
 MIN_VOLUME = 0
-MAX_VOLUME = 100
+MAX_VOLUME = 80
 DEFAULT_VOLUME = 20
+BUTTON_PIN = 24  # Encoder button pin on seesaw
 
 # Global volume state
 current_volume = DEFAULT_VOLUME
@@ -51,6 +54,40 @@ def set_volume(volume):
     print(f"Volume: {volume}%")
     return volume
 
+def is_mpd_playing():
+    """Check if MPD is currently playing"""
+    try:
+        result = subprocess.run(['mpc', 'status'], capture_output=True, text=True)
+        return '[playing]' in result.stdout
+    except:
+        return False
+
+def is_mpv_playing():
+    """Check if MPV is currently running"""
+    try:
+        result = subprocess.run(['pgrep', 'mpv'], capture_output=True)
+        return result.returncode == 0
+    except:
+        return False
+
+def toggle_playback():
+    """Toggle play/pause for MPD and MPV"""
+    mpd_playing = is_mpd_playing()
+    mpv_playing = is_mpv_playing()
+    
+    if mpd_playing:
+        # MPD is playing, pause it
+        subprocess.run(['mpc', 'pause'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print("Paused (MPD)")
+    elif mpv_playing:
+        # MPV is playing, stop it (MPV doesn't have simple pause via command)
+        subprocess.run(['pkill', 'mpv'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print("Stopped (MPV)")
+    else:
+        # Nothing playing, try to resume MPD
+        subprocess.run(['mpc', 'play'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print("Playing (MPD)")
+
 def signal_handler(sig, frame):
     """Handle Ctrl+C gracefully"""
     print("\nVolume control stopped")
@@ -69,6 +106,9 @@ def main():
     seesaw = Seesaw(i2c, addr=ENCODER_ADDR)
     encoder = IncrementalEncoder(seesaw)
     
+    # Set up button
+    seesaw.pin_mode(BUTTON_PIN, seesaw.INPUT_PULLUP)
+    
     # Get initial volume from MPD
     current_volume = get_current_volume()
     print(f"Initial volume: {current_volume}%")
@@ -77,15 +117,17 @@ def main():
     set_volume(current_volume)
     
     last_position = encoder.position
+    button_held = False
     
-    print("Volume control ready. Turn encoder to adjust volume.")
+    print("Volume control ready. Turn encoder to adjust volume, press to play/pause.")
     
     try:
         while True:
+            # Handle encoder rotation
             position = encoder.position
             
             if position != last_position:
-                # Calculate volume change
+                # Calculate volume change (reversed direction)
                 delta = position - last_position
                 current_volume += (delta * -1) * VOLUME_STEP
                 
@@ -93,6 +135,17 @@ def main():
                 current_volume = set_volume(current_volume)
                 
                 last_position = position
+            
+            # Handle button press
+            button_pressed = not seesaw.digital_read(BUTTON_PIN)
+            
+            if button_pressed and not button_held:
+                # Button just pressed
+                toggle_playback()
+                button_held = True
+            elif not button_pressed and button_held:
+                # Button released
+                button_held = False
             
             time.sleep(0.01)
             
