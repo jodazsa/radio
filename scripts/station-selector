@@ -56,9 +56,8 @@ def save_state(bank, station):
 
 def play_station(bank, station):
     """Play a station using radio-play"""
-    print(f"Playing: Bank {bank}, Station {station}")
-    subprocess.Popen(['radio-play', str(bank), str(station)],
-                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    print(f"Switching to Bank {bank}, Station {station}")
+    subprocess.Popen(['radio-play', str(bank), str(station)])
     save_state(bank, station)
 
 def signal_handler(sig, frame):
