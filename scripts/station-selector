@@ -56,8 +56,28 @@ def save_state(bank, station):
 
 def play_station(bank, station):
     """Play a station using radio-play"""
-    print(f"Switching to Bank {bank}, Station {station}")
-    subprocess.Popen(['radio-play', str(bank), str(station)])
+    msg = f"Switching to Bank {bank}, Station {station}"
+    print(msg)
+    # Also write to a log file
+    try:
+        with open('/home/radio/station.log', 'a') as f:
+            import datetime
+            timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            f.write(f"{timestamp} - {msg}\n")
+    except:
+        pass
+    
+    # Call radio-play and capture its output
+    result = subprocess.run(['radio-play', str(bank), str(station)],
+                           capture_output=True, text=True)
+    if result.stdout:
+        print(result.stdout.strip())
+        try:
+            with open('/home/radio/station.log', 'a') as f:
+                f.write(f"{result.stdout.strip()}\n")
+        except:
+            pass
+    
     save_state(bank, station)
 
 def signal_handler(sig, frame):
