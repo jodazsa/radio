@@ -425,31 +425,31 @@ banks:
         type: mp3_dir_random_start_then_in_order
         dir: "recordedshows/2 Jarvis Cocker"    
       3:
-        name: "Jarvis Cocker"
+        name: "Joe Strummer"
         type: mp3_dir_random_start_then_in_order
-        dir: "recordedshows/2 Jarvis Cocker"    
+        dir: "recordedshows/3 Joe Strummer"    
       4:
-        name: "Jarvis Cocker"
+        name: "John Peel"
         type: mp3_dir_random_start_then_in_order
-        dir: "recordedshows/2 Jarvis Cocker"    
+        dir: "recordedshows/4 John Peel"    
       5:
-        name: "Jarvis Cocker"
+        name: "Marian McPartlan"
         type: mp3_dir_random_start_then_in_order
-        dir: "recordedshows/2 Jarvis Cocker"    
+        dir: "recordedshows/5 Marian McPartlan"    
       6:
-        name: "Jarvis Cocker"
+        name: "Paul McCartney"
         type: mp3_dir_random_start_then_in_order
-        dir: "recordedshows/2 Jarvis Cocker"    
+        dir: "recordedshows/6 Paul McCartney Oobu Joobu"    
       7:
-        name: "Jarvis Cocker"
+        name: "Henry Rollins"
         type: mp3_dir_random_start_then_in_order
-        dir: "recordedshows/2 Jarvis Cocker"    
+        dir: "recordedshows/7 Henry Rollins"    
       8:
-        name: "Jarvis Cocker"
+        name: "Artist in Residence"
         type: mp3_dir_random_start_then_in_order
-        dir: "recordedshows/2 Jarvis Cocker"    
+        dir: "recordedshows/8 Artist In residence"    
       9:
-        name: "Jarvis Cocker"
+        name: "Alice Cooper"
         type: mp3_dir_random_start_then_in_order
-        dir: "recordedshows/2 Jarvis Cocker"    
+        dir: "recordedshows/9 Alice Cooper"    
 
