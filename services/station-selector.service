@@ -9,6 +9,8 @@ WorkingDirectory=/home/radio
 ExecStart=/usr/local/bin/station-selector
 Restart=always
 RestartSec=3
+StandardOutput=journal
+StandardError=journal
 
 [Install]
 WantedBy=multi-user.target
