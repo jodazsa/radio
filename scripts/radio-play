@@ -158,6 +158,14 @@ def main():
     # Display what we're playing
     print(f"Playing: {bank['name']} - {station['name']}")
     
+    # Save state for station selector
+    try:
+        with open('/home/radio/.radio-state', 'w') as f:
+            f.write(f"current_bank={bank_num}\n")
+            f.write(f"current_station={station_num}\n")
+    except:
+        pass  # Not critical if state file fails
+    
     # Play based on type
     station_type = station['type']
     
