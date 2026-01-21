@@ -74,6 +74,7 @@ def play_mp3_loop_random_start(filepath):
         f'--volume={MPV_VOLUME}',
         f'--start={start_pos}',
         '--audio-device=alsa/hw:1,0',
+        '--audio-channels=mono',
         '--input-ipc-server=/tmp/mpv-socket',
         full_path
     ])
@@ -114,6 +115,7 @@ def play_mp3_dir_random_start_then_in_order(dirpath):
         '--loop-playlist=inf',
         f'--volume={MPV_VOLUME}',
         '--audio-device=alsa/hw:1,0',
+        '--audio-channels=mono',
         '--input-ipc-server=/tmp/mpv-socket',
         f'--playlist={playlist_file}'
     ])
