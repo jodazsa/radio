@@ -14,10 +14,10 @@ import sys
 
 # Configuration
 ENCODER_ADDR = 0x36
-VOLUME_STEP = 2  # How much to change volume per encoder click
+VOLUME_STEP = 4  # How much to change volume per encoder click
 MIN_VOLUME = 0
 MAX_VOLUME = 100
-DEFAULT_VOLUME = 50
+DEFAULT_VOLUME = 20
 
 # Global volume state
 current_volume = DEFAULT_VOLUME
