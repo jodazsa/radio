@@ -15,6 +15,7 @@ from pathlib import Path
 # Configuration
 YAML_FILE = "/home/radio/stations.yaml"
 AUDIO_BASE_DIR = "/home/radio/audio"
+MPV_VOLUME = 70  # MPV playback volume (0-100), helps balance with stream volume
 
 def load_stations():
     """Load and parse the stations YAML file"""
@@ -70,6 +71,7 @@ def play_mp3_loop_random_start(filepath):
         'mpv',
         '--no-video',
         '--loop=inf',
+        f'--volume={MPV_VOLUME}',
         f'--start={start_pos}',
         '--audio-device=alsa/hw:1,0',
         full_path
@@ -109,6 +111,7 @@ def play_mp3_dir_random_start_then_in_order(dirpath):
         'mpv',
         '--no-video',
         '--loop-playlist=inf',
+        f'--volume={MPV_VOLUME}',
         '--audio-device=alsa/hw:1,0',
         f'--playlist={playlist_file}'
     ])
