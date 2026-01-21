@@ -1,0 +1,120 @@
+#!/usr/bin/env python3
+"""
+station-selector: Monitor BCD rotary switch and change stations
+Reads a 10-position BCD switch and updates station within current bank
+"""
+
+import RPi.GPIO as GPIO
+import subprocess
+import time
+import signal
+import sys
+import os
+
+# Configuration
+BCD_PINS = [17, 27, 22, 23]  # GPIO pins for bits 0, 1, 2, 3 (1, 2, 4, 8)
+STATE_FILE = "/home/radio/.radio-state"
+CHECK_INTERVAL = 0.1  # How often to check switch position (seconds)
+
+# Current state
+current_bank = 0
+current_station = 0
+
+def read_bcd_switch():
+    """Read the current position (0-9) from the BCD switch"""
+    value = 0
+    for i, pin in enumerate(BCD_PINS):
+        # Pins are pulled HIGH, switch pulls them LOW
+        # So we need to invert: if LOW (0), bit is active (1)
+        if GPIO.input(pin) == GPIO.LOW:
+            value |= (1 << i)
+    return value
+
+def load_state():
+    """Load current bank and station from state file"""
+    global current_bank, current_station
+    try:
+        if os.path.exists(STATE_FILE):
+            with open(STATE_FILE, 'r') as f:
+                for line in f:
+                    if line.startswith('current_bank='):
+                        current_bank = int(line.split('=')[1].strip())
+                    elif line.startswith('current_station='):
+                        current_station = int(line.split('=')[1].strip())
+    except:
+        pass
+    print(f"Loaded state: Bank {current_bank}, Station {current_station}")
+
+def save_state(bank, station):
+    """Save current bank and station to state file"""
+    try:
+        with open(STATE_FILE, 'w') as f:
+            f.write(f"current_bank={bank}\n")
+            f.write(f"current_station={station}\n")
+    except:
+        pass
+
+def play_station(bank, station):
+    """Play a station using radio-play"""
+    print(f"Playing: Bank {bank}, Station {station}")
+    subprocess.Popen(['radio-play', str(bank), str(station)],
+                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    save_state(bank, station)
+
+def signal_handler(sig, frame):
+    """Handle Ctrl+C gracefully"""
+    print("\nStation selector stopped")
+    GPIO.cleanup()
+    sys.exit(0)
+
+def main():
+    global current_bank, current_station
+    
+    # Set up signal handler
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+    
+    # Set up GPIO
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setwarnings(False)
+    
+    # Configure BCD pins as inputs with pull-up resistors
+    for pin in BCD_PINS:
+        GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    
+    print("Starting station selector...")
+    
+    # Load current state
+    load_state()
+    
+    # Get initial switch position
+    last_position = read_bcd_switch()
+    print(f"Initial switch position: {last_position}")
+    
+    print("Station selector ready. Turn switch to change stations.")
+    
+    try:
+        while True:
+            # Read current switch position
+            position = read_bcd_switch()
+            
+            # If position changed and is different from current station
+            if position != last_position:
+                print(f"Switch moved to position {position}")
+                
+                # Update to new station in current bank
+                if position != current_station:
+                    play_station(current_bank, position)
+                    current_station = position
+                
+                last_position = position
+            
+            time.sleep(CHECK_INTERVAL)
+            
+    except Exception as e:
+        print(f"Error: {e}")
+        GPIO.cleanup()
+        sys.exit(1)
+
+if __name__ == '__main__':
+    main()
