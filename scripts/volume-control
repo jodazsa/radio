@@ -87,7 +87,7 @@ def main():
             if position != last_position:
                 # Calculate volume change
                 delta = position - last_position
-                current_volume += delta * VOLUME_STEP
+                current_volume += (delta * -1) * VOLUME_STEP
                 
                 # Set new volume
                 current_volume = set_volume(current_volume)
