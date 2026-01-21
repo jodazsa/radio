@@ -1,0 +1,59 @@
+# Hardware Configuration for Radio Project
+
+# HiFiBerry Model
+# Options: "amp4", "miniamp"
+hifiberry_model: "amp4"
+
+# Audio Configuration
+audio:
+  # ALSA card number (usually 1, check with 'aplay -l')
+  card: 1
+  # ALSA device number
+  device: 0
+  
+# Volume Settings
+volume:
+  min: 50          # Minimum volume (0-100)
+  max: 100         # Maximum volume (0-100)
+  default: 50      # Starting volume (0-100)
+  step: 4          # Volume change per encoder click
+
+# GPIO Pin Assignments
+gpio:
+  # Rotary Encoder (I2C address and pins handled by library)
+  encoder_i2c_address: 0x36
+  
+  # Station Selector BCD Switch
+  station_switch:
+    bit0: 17  # GPIO pin for bit 0 (value 1)
+    bit1: 27  # GPIO pin for bit 1 (value 2)
+    bit2: 22  # GPIO pin for bit 2 (value 4)
+    bit3: 23  # GPIO pin for bit 3 (value 8)
+  
+  # Bank Selector BCD Switch
+  bank_switch:
+    bit0: 5   # GPIO pin for bit 0 (value 1)
+    bit1: 6   # GPIO pin for bit 1 (value 2)
+    bit2: 13  # GPIO pin for bit 2 (value 4)
+    bit3: 26  # GPIO pin for bit 3 (value 8)
+
+# HiFiBerry Model-Specific Settings
+hifiberry_configs:
+  amp4:
+    overlay: "hifiberry-dacplus-std"
+    reserved_gpios: [18, 19, 20, 21]  # I2S pins used by AMP4
+    mixer_controls:
+      main_volume: "Digital"
+      analog_volume: "Analogue"
+      
+  miniamp:
+    overlay: "hifiberry-dac"
+    reserved_gpios: [18, 19, 20, 21]  # I2S pins used by MiniAmp
+    mixer_controls:
+      main_volume: "Digital"
+      analog_volume: "Analogue"
+
+# Audio Processing
+audio_processing:
+  mono_downmix: true  # Set to true for single speaker setups
+  format: "44100:16:1"  # Sample rate:bits:channels (1=mono, 2=stereo)
