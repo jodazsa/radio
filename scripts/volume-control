@@ -13,14 +13,36 @@ import subprocess
 import time
 import signal
 import sys
+import yaml
+
+# Load configuration
+CONFIG_FILE = "/home/radio/hardware-config.yaml"
+
+def load_config():
+    """Load hardware configuration"""
+    try:
+        with open(CONFIG_FILE, 'r') as f:
+            return yaml.safe_load(f)
+    except:
+        # Fallback to defaults if config not found
+        print(f"Warning: Could not load {CONFIG_FILE}, using defaults")
+        return {
+            'gpio': {'encoder_i2c_address': 0x36},
+            'volume': {'step': 4, 'min': 50, 'max': 100, 'default': 50},
+            'audio': {'card': 1, 'device': 0}
+        }
+
+config = load_config()
 
 # Configuration
-ENCODER_ADDR = 0x36
-VOLUME_STEP = 4  # How much to change volume per encoder click
-MIN_VOLUME = 50
-MAX_VOLUME = 100
-DEFAULT_VOLUME = 60
+ENCODER_ADDR = config['gpio']['encoder_i2c_address']
+VOLUME_STEP = config['volume']['step']
+MIN_VOLUME = config['volume']['min']
+MAX_VOLUME = config['volume']['max']
+DEFAULT_VOLUME = config['volume']['default']
 BUTTON_PIN = 24  # Encoder button pin on seesaw
+AUDIO_CARD = config['audio']['card']
+AUDIO_DEVICE = config['audio']['device']
 
 # Global volume state
 current_volume = DEFAULT_VOLUME
@@ -62,64 +84,21 @@ def is_mpd_playing():
     except:
         return False
 
-def is_mpv_playing():
-    """Check if MPV is currently running"""
-    try:
-        result = subprocess.run(['pgrep', 'mpv'], capture_output=True)
-        return result.returncode == 0
-    except:
-        return False
-
-def is_mpv_paused():
-    """Check if MPV is paused via IPC socket"""
-    try:
-        import socket
-        import json
-        sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-        sock.connect('/tmp/mpv-socket')
-        sock.sendall(b'{ "command": ["get_property", "pause"] }\n')
-        response = sock.recv(1024).decode()
-        sock.close()
-        data = json.loads(response)
-        return data.get('data', False)
-    except:
-        return False
-
 def toggle_playback():
-    """Toggle play/pause for MPD (streams) and MPV (recorded audio)"""
-    mpd_playing = is_mpd_playing()
-    mpv_playing = is_mpv_playing()
-    
-    if mpd_playing:
-        # MPD is playing, pause it
-        subprocess.run(['mpc', 'pause'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        print("Paused (MPD)")
-    elif mpv_playing:
-        # MPV is playing or paused, toggle via IPC socket
-        try:
-            import socket
-            sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-            sock.connect('/tmp/mpv-socket')
-            # Send pause toggle command
-            sock.sendall(b'{ "command": ["cycle", "pause"] }\n')
-            sock.close()
-            
-            # Check new state
-            if is_mpv_paused():
-                print("Paused (MPV)")
-            else:
-                print("Playing (MPV)")
-        except Exception as e:
-            print(f"Error controlling MPV: {e}")
-    else:
-        # Check if MPD has something paused
-        result = subprocess.run(['mpc', 'status'], capture_output=True, text=True)
-        if '[paused]' in result.stdout:
-            # Resume paused MPD stream
-            subprocess.run(['mpc', 'play'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            print("Resumed (MPD)")
+    """Toggle play/pause for MPD"""
+    try:
+        result = subprocess.run(['mpc', 'toggle'], capture_output=True, text=True)
+        
+        # Check new state
+        status = subprocess.run(['mpc', 'status'], capture_output=True, text=True)
+        if '[playing]' in status.stdout:
+            print("Playing")
+        elif '[paused]' in status.stdout:
+            print("Paused")
         else:
-            print("Nothing playing - use radio-play to start a station")
+            print("Stopped")
+    except Exception as e:
+        print(f"Error toggling playback: {e}")
 
 def signal_handler(sig, frame):
     """Handle Ctrl+C gracefully"""
