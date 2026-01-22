@@ -31,9 +31,8 @@ echo "Installing $STATUS_SCRIPT..."
 sudo cp scripts/$STATUS_SCRIPT /usr/local/bin/
 sudo chmod +x /usr/local/bin/$STATUS_SCRIPT
 
-echo "Installing $UPDATE_SCRIPT..."
-sudo cp scripts/$UPDATE_SCRIPT /home/radio/radio/scripts/
-sudo chmod +x /home/radio/radio/scripts/$UPDATE_SCRIPT
+# Make sure update script is executable
+chmod +x scripts/$UPDATE_SCRIPT
 
 # Install systemd services
 echo "Installing volume control service..."
