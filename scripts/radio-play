@@ -60,27 +60,8 @@ def play_stream(url):
     subprocess.run(['mpc', 'add', url], check=True)
     subprocess.run(['mpc', 'play'], check=True)
 
-def play_mp3_loop_random_start(filepath):
-    """Play a single MP3 file with MPD, starting at a random position, looping forever"""
-    full_path = os.path.join(AUDIO_BASE_DIR, filepath)
-    
-    if not os.path.exists(full_path):
-        print(f"Error: Audio file not found: {full_path}")
-        sys.exit(1)
-    
-    print(f"Playing file loop: {filepath}")
-    
-    # Clear playlist and add file
-    subprocess.run(['mpc', 'clear'], check=True)
-    subprocess.run(['mpc', 'add', full_path], check=True)
-    
-    # Enable repeat mode for looping
-    subprocess.run(['mpc', 'repeat', 'on'], check=True)
-    
-    # Start playback
-    subprocess.run(['mpc', 'play'], check=True)
-    
-    # Get file duration and seek to random position
+def seek_to_random_position():
+    """Seek to a random position in the currently playing track"""
     try:
         # Let it start playing, then get status
         import time
@@ -113,9 +94,34 @@ def play_mp3_loop_random_start(filepath):
                             
                             print(f"Seeking to random position: {seek_time}")
                             subprocess.run(['mpc', 'seek', seek_time])
-                            break
+                            return True
+        return False
     except Exception as e:
         print(f"Warning: Could not seek to random position: {e}")
+        return False
+
+def play_mp3_loop_random_start(filepath):
+    """Play a single MP3 file with MPD, starting at a random position, looping forever"""
+    full_path = os.path.join(AUDIO_BASE_DIR, filepath)
+    
+    if not os.path.exists(full_path):
+        print(f"Error: Audio file not found: {full_path}")
+        sys.exit(1)
+    
+    print(f"Playing file loop: {filepath}")
+    
+    # Clear playlist and add file
+    subprocess.run(['mpc', 'clear'], check=True)
+    subprocess.run(['mpc', 'add', full_path], check=True)
+    
+    # Enable repeat mode for looping
+    subprocess.run(['mpc', 'repeat', 'on'], check=True)
+    
+    # Start playback
+    subprocess.run(['mpc', 'play'], check=True)
+    
+    # Seek to random position
+    seek_to_random_position()
 
 def play_mp3_dir_random_start_then_in_order(dirpath):
     """Play files from a directory with MPD: random start, then continue in order, looping"""
@@ -156,6 +162,9 @@ def play_mp3_dir_random_start_then_in_order(dirpath):
     
     # Start playback
     subprocess.run(['mpc', 'play'], check=True)
+    
+    # Seek to random position in the first file
+    seek_to_random_position()
 
 def main():
     if len(sys.argv) != 3:
