@@ -49,6 +49,13 @@ nano /home/radio/hardware-config.yaml
 
 Edit the file to match your setup:
 - Set `hifiberry_model` to `"amp4"` or `"miniamp"`
+- Set `auto_update.github_url` to your stations.yaml GitHub URL
+  - Use the "raw" GitHub URL (click "Raw" button when viewing file on GitHub)
+  - Example: `https://raw.githubusercontent.com/username/repo/main/config/stations.yaml`
+  - Each Pi can pull from a different URL for different station lists!
+- Set `auto_update.enabled` to `false` if you want to disable auto-updates
+- Set `paths.stations_yaml` if using a custom local path
+- Set `paths.audio_base` if storing audio files elsewhere
 - Adjust GPIO pins if needed
 - Configure volume settings
 
@@ -210,6 +217,49 @@ Make sure you're not using GPIOs 18, 19, 20, 21 (reserved for HiFiBerry I2S).
 2. Copy and customize `hardware-config.yaml` for each device
 3. Run `setup-hardware.sh` on each Pi
 4. Run `install.sh` to install scripts
-5. All Pis can share the same `stations.yaml` from the repository
+
+### Different Stations Per Pi
+
+Each Pi can pull from a different stations list:
+
+**Pi 1 (Living Room) - Rock stations:**
+```yaml
+auto_update:
+  github_url: "https://raw.githubusercontent.com/username/repo/main/stations-rock.yaml"
+```
+
+**Pi 2 (Bedroom) - Jazz stations:**
+```yaml
+auto_update:
+  github_url: "https://raw.githubusercontent.com/username/repo/main/stations-jazz.yaml"
+```
+
+**Pi 3 (Kitchen) - All stations:**
+```yaml
+auto_update:
+  github_url: "https://raw.githubusercontent.com/username/repo/main/stations-all.yaml"
+```
+
+All Pis will automatically stay in sync with their respective GitHub URLs!
+
+### Same Stations, Different Hardware
+
+Multiple Pis with different HiFiBerry models can share the same stations:
+
+**Pi 1 (AMP4):**
+```yaml
+hifiberry_model: "amp4"
+auto_update:
+  github_url: "https://raw.githubusercontent.com/username/repo/main/config/stations.yaml"
+```
+
+**Pi 2 (MiniAmp):**
+```yaml
+hifiberry_model: "miniamp"
+auto_update:
+  github_url: "https://raw.githubusercontent.com/username/repo/main/config/stations.yaml"
+```
+
+Same code, same stations, different hardware - just change one line!
 
 The config file makes it easy to adapt to different HiFiBerry models and GPIO layouts!
