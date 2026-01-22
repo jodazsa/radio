@@ -5,6 +5,8 @@ REPO_DIR="/home/radio/radio"
 SCRIPT_NAME="radio-play"
 VOLUME_SCRIPT="volume-control"
 SELECTOR_SCRIPT="station-selector"
+STATUS_SCRIPT="radio-status"
+UPDATE_SCRIPT="update-stations.sh"
 
 echo "Updating radio setup from GitHub..."
 
@@ -25,6 +27,14 @@ echo "Installing $SELECTOR_SCRIPT..."
 sudo cp scripts/$SELECTOR_SCRIPT /usr/local/bin/
 sudo chmod +x /usr/local/bin/$SELECTOR_SCRIPT
 
+echo "Installing $STATUS_SCRIPT..."
+sudo cp scripts/$STATUS_SCRIPT /usr/local/bin/
+sudo chmod +x /usr/local/bin/$STATUS_SCRIPT
+
+echo "Installing $UPDATE_SCRIPT..."
+sudo cp scripts/$UPDATE_SCRIPT /home/radio/radio/scripts/
+sudo chmod +x /home/radio/radio/scripts/$UPDATE_SCRIPT
+
 # Install systemd services
 echo "Installing volume control service..."
 sudo cp services/volume-control.service /etc/systemd/system/
@@ -38,6 +48,13 @@ sudo systemctl daemon-reload
 sudo systemctl enable station-selector.service
 sudo systemctl restart station-selector.service
 
+echo "Installing auto-update timer..."
+sudo cp services/radio-update-stations.service /etc/systemd/system/
+sudo cp services/radio-update-stations.timer /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable radio-update-stations.timer
+sudo systemctl start radio-update-stations.timer
+
 # Copy config to home directory
 echo "Updating stations.yaml..."
 cp config/stations.yaml /home/radio/stations.yaml
@@ -45,13 +62,16 @@ cp config/stations.yaml /home/radio/stations.yaml
 echo ""
 echo "✓ Radio setup updated successfully!"
 echo ""
-echo "Usage: radio-play <bank> <station>"
-echo "Example: radio-play 0 0"
+echo "Commands:"
+echo "  radio-play <bank> <station>  - Play a station"
+echo "  radio-status                 - Show current station"
 echo ""
 echo "Services running:"
 echo "  - volume-control (rotary encoder)"
 echo "  - station-selector (BCD switch)"
+echo "  - radio-update-stations.timer (daily YAML updates)"
 echo ""
 echo "Check status:"
 echo "  sudo systemctl status volume-control"
 echo "  sudo systemctl status station-selector"
+echo "  sudo systemctl list-timers radio-update-stations.timer"
