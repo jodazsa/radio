@@ -1,0 +1,7 @@
+[Unit]
+Description=Update radio stations.yaml from GitHub
+
+[Service]
+Type=oneshot
+User=radio
+ExecStart=/home/radio/radio/scripts/update-stations.sh
