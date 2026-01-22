@@ -318,31 +318,31 @@ banks:
       0:
         name: "Mission Control - Soma FM"
         type: stream
-        url: "https://somafm.com/m3u/missioncontrol130.m3u"
+        url: "https://ice5.somafm.com/missioncontrol-128-aac"
       1:
         name: "Drone Zone - Soma FM"
         type: stream
-        url: "https://somafm.com/dronezone130.pls"
+        url: "https://ice5.somafm.com/dronezone-128-aac"
       2:
         name: "Space Station Soma FM"
         type: stream
-        url: "https://somafm.com/m3u/spacestation130.m3u"
+        url: "https://ice5.somafm.com/spacestation-128-aac"
       3:
         name: "DEF CON Radio Soma FM"
         type: stream
-        url: "https://somafm.com/m3u/defcon130.m3u"
+        url: "https://ice5.somafm.com/defcon-128-aac"
       4:
         name: "Dark Zone Soma FM"
         type: stream
-        url: "https://somafm.com/m3u/darkzone130.m3u"
+        url: "https://ice5.somafm.com/darkzone-128-aac"
       5:
         name: "Vaporwaves Soma FM"
         type: stream
-        url: "https://somafm.com/m3u/vaporwaves130.m3u"
+        url: "https://ice5.somafm.com/vaporwaves-128-aac"
       6:
         name: "Soma FM Specials"
         type: stream
-        url: "https://somafm.com/m3u/specials130.m3u"
+        url: "https://ice5.somafm.com/specials-128-aac"
       7:
         name: "9128.live"
         type: stream
@@ -354,7 +354,7 @@ banks:
       9:
         name: "Morong Community Radio Philippines"
         type: stream
-        url: "http://wwoz-sc.streamguys.com/wwoz-hi.mp3" 
+        url: "https://broadcast.shoutcheap.com/proxy/morong/stream" 
   8:
     name: "Grand Theft Auto"
     stations:
