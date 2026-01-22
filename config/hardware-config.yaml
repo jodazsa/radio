@@ -1,8 +1,21 @@
 # Hardware Configuration for Radio Project
+# Copy this file to /home/radio/hardware-config.yaml and customize for your setup
 
 # HiFiBerry Model
 # Options: "amp4", "miniamp"
 hifiberry_model: "amp4"
+
+# File Paths
+paths:
+  stations_yaml: "/home/radio/stations.yaml"   # Local path where stations file is stored
+  audio_base: "/home/radio/audio"              # Base directory for audio files
+
+# Auto-Update Configuration
+auto_update:
+  # GitHub URL to pull stations.yaml from (raw content URL)
+  # Example: "https://raw.githubusercontent.com/username/repo/main/config/stations.yaml"
+  github_url: "https://raw.githubusercontent.com/jodazsa/radio/refs/heads/main/config/stations.yaml"
+  enabled: true  # Set to false to disable auto-updates
 
 # Audio Configuration
 audio:
