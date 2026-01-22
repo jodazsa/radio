@@ -43,6 +43,7 @@ DEFAULT_VOLUME = config['volume']['default']
 BUTTON_PIN = 24  # Encoder button pin on seesaw
 AUDIO_CARD = config['audio']['card']
 AUDIO_DEVICE = config['audio']['device']
+MAX_SANE_DELTA = 10  # Ignore encoder deltas larger than this (hardware noise)
 
 # Global volume state
 current_volume = DEFAULT_VOLUME
@@ -141,12 +142,18 @@ def main():
             if position != last_position:
                 # Calculate volume change (reversed direction)
                 delta = position - last_position
-                current_volume += (delta * -1) * VOLUME_STEP
                 
-                # Set new volume
-                current_volume = set_volume(current_volume)
-                
-                last_position = position
+                # Apply noise filter - ignore jumps that are too large
+                if abs(delta) > MAX_SANE_DELTA:
+                    print(f"Ignoring noisy encoder delta: {delta}")
+                    last_position = position
+                else:
+                    current_volume += (delta * -1) * VOLUME_STEP
+                    
+                    # Set new volume
+                    current_volume = set_volume(current_volume)
+                    
+                    last_position = position
             
             # Handle button press
             button_pressed = not seesaw.digital_read(BUTTON_PIN)
