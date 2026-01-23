@@ -7,6 +7,7 @@ VOLUME_SCRIPT="volume-control"
 SELECTOR_SCRIPT="station-selector"
 STATUS_SCRIPT="radio-status"
 UPDATE_SCRIPT="update-stations.sh"
+SHUFFLE_SCRIPT="shuffle-mode"
 
 echo "Updating radio setup from GitHub..."
 
@@ -31,6 +32,10 @@ echo "Installing $STATUS_SCRIPT..."
 sudo cp scripts/$STATUS_SCRIPT /usr/local/bin/
 sudo chmod +x /usr/local/bin/$STATUS_SCRIPT
 
+echo "Installing $SHUFFLE_SCRIPT..."
+sudo cp scripts/$SHUFFLE_SCRIPT /usr/local/bin/
+sudo chmod +x /usr/local/bin/$SHUFFLE_SCRIPT
+
 # Make sure update script is executable
 chmod +x scripts/$UPDATE_SCRIPT
 
@@ -46,6 +51,12 @@ sudo cp services/station-selector.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable station-selector.service
 sudo systemctl restart station-selector.service
+
+echo "Installing shuffle mode service..."
+sudo cp services/shuffle-mode.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable shuffle-mode.service
+sudo systemctl restart shuffle-mode.service
 
 echo "Installing auto-update timer..."
 sudo cp services/radio-update-stations.service /etc/systemd/system/
@@ -68,9 +79,11 @@ echo ""
 echo "Services running:"
 echo "  - volume-control (rotary encoder)"
 echo "  - station-selector (BCD switch)"
+echo "  - shuffle-mode (shuffle switch)"
 echo "  - radio-update-stations.timer (daily YAML updates)"
 echo ""
 echo "Check status:"
 echo "  sudo systemctl status volume-control"
 echo "  sudo systemctl status station-selector"
+echo "  sudo systemctl status shuffle-mode"
 echo "  sudo systemctl list-timers radio-update-stations.timer"
