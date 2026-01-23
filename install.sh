@@ -69,6 +69,15 @@ sudo systemctl start radio-update-stations.timer
 echo "Updating stations.yaml..."
 cp config/stations.yaml /home/radio/stations.yaml
 
+# Copy hardware-config.yaml if it doesn't exist (don't overwrite existing)
+if [ ! -f /home/radio/hardware-config.yaml ]; then
+    echo "Installing default hardware-config.yaml..."
+    cp config/hardware-config.yaml /home/radio/hardware-config.yaml
+    echo "⚠ Please edit /home/radio/hardware-config.yaml to match your hardware setup"
+else
+    echo "hardware-config.yaml already exists, not overwriting"
+fi
+
 echo ""
 echo "✓ Radio setup updated successfully!"
 echo ""
