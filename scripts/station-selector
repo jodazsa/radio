@@ -12,7 +12,7 @@ import sys
 import os
 
 # Configuration
-STATION_BCD_PINS = [17, 27, 22, 23]  # GPIO pins for station switch bits 0, 1, 2, 3
+STATION_BCD_PINS = [17, 7, 22, 23]  # GPIO pins for station switch bits 0, 1, 2, 3
 BANK_BCD_PINS = [5, 6, 13, 26]  # GPIO pins for bank switch bits 0, 1, 2, 3
 STATE_FILE = "/home/radio/.radio-state"
 CHECK_INTERVAL = 0.1  # How often to check switch position (seconds)
