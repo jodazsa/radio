@@ -4,6 +4,7 @@ kexp http://live-aacplus-64.kexp.org/kexp64.aac
 wfmt http://stream.wfmt.com/main
 kuow https://playerservices.streamtheworld.com/api/livestream-redirect/KUOWFM_AAC.aac
 kiro http://14093.live.streamtheworld.com:3690/KIROFM_SC  # but commercial first
+WQXR Memphis 91.7 FM https://crosstown.streamguys1.com/live-website-aac
 
 
 News Stations
@@ -88,8 +89,7 @@ Rotating holiday stations?
 Roll fm Finland
 Wxpn
 FM4 Austria
-Studio one Iowa public radio 
-KEXP
+
 KUTX
 WBER
 Inhailer
