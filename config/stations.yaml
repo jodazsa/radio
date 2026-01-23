@@ -98,43 +98,43 @@ banks:
     name: "Around the US"
     stations:
       0:
-        name: "WQXR Memphis 91.7 FM"
+        name: "WFMU 91.1 Hudsdon Valley"
         type: stream
-        url: "https://crosstown.streamguys1.com/live-website-aac"
+        url: "https://stream0.wfmu.org/freeform-128k.mp3"
       1:
-        name: "SoCal Sound 88.5 FM"
-        type: stream
-        url: "https://www.streamvortex.com:8444/s/12200/"
-      2:
-        name: "KEXP Seattle 90.3 FM"
-        type: stream
-        url: "https://kexp-mp3-128.streamguys1.com/kexp128.mp3"
-      3:
         name: "WPKN Bridgeport, Connecticut 89.5"
         type: stream
         url: "https://ice25.securenetsystems.net/WPKN"
+      2:
+        name: "KEXP Seattle 90.3 FM"
+        type: stream
+        url: "https://kexp-mp3-128.streamguys1.com/kexp128.mp3"        
+      3:
+        name: "WQXR Memphis 91.7 FM"
+        type: stream
+        url: "https://crosstown.streamguys1.com/live-website-aac"
       4:
+        name: "SoCal Sound 88.5 FM"
+        type: stream
+        url: "https://www.streamvortex.com:8444/s/12200/"
+      5:
         name: "Hot 97 NYC"
         type: stream
         url: "https://27253.live.streamtheworld.com/WQHTFMAAC.aac"
         # PLAYS AD FIRST
-      5:
+      6:
         name: "Iowa Public Radio"
         type: stream
         url: "https://studioone-stream.iowapublicradio.org/StudioOne.mp3"
-      6:
+      7:
         name: "WDVX 89.9 Knoxville"
         type: stream
         url: "https://wdvx.streamguys1.com/live"
         # QUIET
-      7:
+      8:
         name: "WMOT 89.5 Middle Tennessee"
         type: stream
         url: "https://26443.live.streamtheworld.com/WMOTFM.mp3"
-      8:
-        name: "WFMU 91.1 Hudsdon Valley"
-        type: stream
-        url: "https://stream0.wfmu.org/freeform-128k.mp3"
       9:
         name: "WFUV Fordham University"
         type: stream
