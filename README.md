@@ -11,6 +11,7 @@ This guide walks you through setting up the internet radio on a Raspberry Pi wit
 - **Controls**:
   - Adafruit I2C Rotary Encoder (volume control & play/pause)
   - Two 10-position BCD rotary switches (bank and station selection)
+  - Optional: ON/OFF switch for shuffle mode
 
 ## Quick Setup
 
@@ -154,12 +155,17 @@ tail -f /home/radio/station.log
 - SCL → GPIO 3 (SCL)
 
 ### Station Selector Switch (BCD)
-See `hardware-config.yaml` for GPIO assignments (default: 17, 27, 22, 23)
+See `hardware-config.yaml` for GPIO assignments (default: 17, 7, 22, 23)
 
 ### Bank Selector Switch (BCD)
-See `hardware-config.yaml` for GPIO assignments (default: 5, 6, 13, 26)
+See `hardware-config.yaml` for GPIO assignments (default: 5, 6, 13, 8)
 
-**Important**: Avoid GPIOs 18, 19, 20, 21 - these are used by HiFiBerry for I2S audio.
+### Shuffle Mode Switch (Optional)
+- ON/OFF switch connected to GPIO (default: 24)
+- When ON: Automatically changes stations every 45 seconds
+- When OFF: Normal manual station selection
+
+**Important**: Avoid GPIOs 18, 19, 20, 21 (used by HiFiBerry for I2S audio) and GPIOs 26, 27 (reserved).
 
 ## Updating
 
