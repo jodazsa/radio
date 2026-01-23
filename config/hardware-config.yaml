@@ -55,7 +55,7 @@ gpio:
 
 # Shuffle Mode Configuration (optional feature)
 shuffle_mode:
-  interval_seconds: 45           # How often to change stations (in seconds)
+  interval_seconds: 15           # How often to change stations (in seconds)
   enabled_banks: [0, 1, 2, 3, 4, 5, 6, 7]  # Which banks to shuffle through (exclude 8, 9 if you want)
 
 # HiFiBerry Model-Specific Settings
