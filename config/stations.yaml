@@ -110,9 +110,9 @@ banks:
         type: stream
         url: "https://kexp-mp3-128.streamguys1.com/kexp128.mp3"        
       3:
-        name: "WQXR Memphis 91.7 FM"
+        name: "KABF Little Rock"
         type: stream
-        url: "https://crosstown.streamguys1.com/live-website-aac"
+        url: "https://cast.acornradio.org/kabf"
       4:
         name: "SoCal Sound 88.5 FM"
         type: stream
