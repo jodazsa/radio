@@ -36,26 +36,29 @@ gpio:
   # Rotary Encoder (I2C address and pins handled by library)
   encoder_i2c_address: 0x36
   
+  # Shuffle Mode Switch (optional)
+  shuffle_switch: 24  # GPIO pin for shuffle mode on/off switch
+  
   # Station Selector BCD Switch
   station_switch:
-    bit0: 17  # GPIO pin for bit 0 (value 1)
-    bit1: 7   # GPIO pin for bit 1 (value 2) - CHANGED from 27
+    bit0: 9   # GPIO pin for bit 0 (value 1)
+    bit1: 10  # GPIO pin for bit 1 (value 2)
     bit2: 22  # GPIO pin for bit 2 (value 4)
-    bit3: 23  # GPIO pin for bit 3 (value 8)
+    bit3: 17  # GPIO pin for bit 3 (value 8)
   
   # Bank Selector BCD Switch
   bank_switch:
-    bit0: 5   # GPIO pin for bit 0 (value 1)
+    bit0: 13  # GPIO pin for bit 0 (value 1)
     bit1: 6   # GPIO pin for bit 1 (value 2)
-    bit2: 13  # GPIO pin for bit 2 (value 4)
-    bit3: 8   # GPIO pin for bit 3 (value 8) - CHANGED from 26
+    bit2: 5   # GPIO pin for bit 2 (value 4)
+    bit3: 11  # GPIO pin for bit 3 (value 8)
   
   # Shuffle Mode Switch (optional)
   shuffle_switch: 24  # GPIO pin for shuffle mode ON/OFF switch
 
 # Shuffle Mode Configuration (optional feature)
 shuffle_mode:
-  interval_seconds: 15           # How often to change stations (in seconds)
+  interval_seconds: 45           # How often to change stations (in seconds)
   enabled_banks: [0, 1, 2, 3, 4, 5, 6, 7]  # Which banks to shuffle through (exclude 8, 9 if you want)
 
 # HiFiBerry Model-Specific Settings
@@ -78,3 +81,8 @@ hifiberry_configs:
 audio_processing:
   mono_downmix: true  # Set to true for single speaker setups
   format: "44100:16:1"  # Sample rate:bits:channels (1=mono, 2=stereo)
+
+# Shuffle Mode Configuration (optional feature)
+shuffle_mode:
+  interval_seconds: 15  # How often to change stations when shuffle is ON
+  enabled_banks: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]  # Which banks to shuffle through
