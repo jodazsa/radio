@@ -155,14 +155,14 @@ tail -f /home/radio/station.log
 - SCL → GPIO 3 (SCL)
 
 ### Station Selector Switch (BCD)
-See `hardware-config.yaml` for GPIO assignments (default: 17, 7, 22, 23)
+See `hardware-config.yaml` for GPIO assignments (default: 9, 10, 22, 17)
 
 ### Bank Selector Switch (BCD)
-See `hardware-config.yaml` for GPIO assignments (default: 5, 6, 13, 8)
+See `hardware-config.yaml` for GPIO assignments (default: 13, 6, 5, 11)
 
 ### Shuffle Mode Switch (Optional)
 - ON/OFF switch connected to GPIO (default: 24)
-- When ON: Automatically changes stations every 45 seconds
+- When ON: Automatically changes stations every 15 seconds
 - When OFF: Normal manual station selection
 
 **Important**: Avoid GPIOs 18, 19, 20, 21 (used by HiFiBerry for I2S audio) and GPIOs 26, 27 (reserved).
