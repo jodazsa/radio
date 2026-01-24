@@ -10,10 +10,41 @@ import time
 import signal
 import sys
 import os
+import yaml
+
+# Load configuration
+CONFIG_FILE = "/home/radio/hardware-config.yaml"
+
+def load_config():
+    """Load hardware configuration"""
+    try:
+        with open(CONFIG_FILE, 'r') as f:
+            return yaml.safe_load(f)
+    except:
+        # Fallback to defaults if config not found
+        print(f"Warning: Could not load {CONFIG_FILE}, using defaults")
+        return {
+            'gpio': {
+                'station_switch': {'bit0': 9, 'bit1': 10, 'bit2': 22, 'bit3': 17},
+                'bank_switch': {'bit0': 13, 'bit1': 6, 'bit2': 5, 'bit3': 11}
+            }
+        }
+
+config = load_config()
 
 # Configuration
-STATION_BCD_PINS = [17, 7, 22, 23]  # GPIO pins for station switch bits 0, 1, 2, 3
-BANK_BCD_PINS = [5, 6, 13, 8]  # GPIO pins for bank switch bits 0, 1, 2, 3
+STATION_BCD_PINS = [
+    config['gpio']['station_switch']['bit0'],
+    config['gpio']['station_switch']['bit1'],
+    config['gpio']['station_switch']['bit2'],
+    config['gpio']['station_switch']['bit3']
+]
+BANK_BCD_PINS = [
+    config['gpio']['bank_switch']['bit0'],
+    config['gpio']['bank_switch']['bit1'],
+    config['gpio']['bank_switch']['bit2'],
+    config['gpio']['bank_switch']['bit3']
+]
 STATE_FILE = "/home/radio/.radio-state"
 CHECK_INTERVAL = 0.1  # How often to check switch position (seconds)
 
