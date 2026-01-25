@@ -1,6 +1,4 @@
-# Radio Project Setup Guide
-
-This guide walks you through setting up the internet radio on a Raspberry Pi with HiFiBerry.
+# Radio Guide
 
 ## Supported Hardware
 
