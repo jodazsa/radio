@@ -26,7 +26,7 @@ audio:
   
 # Volume Settings
 volume:
-  min: 50          # Minimum volume (0-100)
+  min: 0           # Minimum volume (0-100) - allows full range
   max: 100         # Maximum volume (0-100)
   default: 50      # Starting volume (0-100)
   step: 4          # Volume change per encoder click
@@ -41,17 +41,17 @@ gpio:
   
   # Station Selector BCD Switch
   station_switch:
-    bit0: 9   # GPIO pin for bit 0 (value 1)
-    bit1: 10  # GPIO pin for bit 1 (value 2)
-    bit2: 22  # GPIO pin for bit 2 (value 4)
-    bit3: 17  # GPIO pin for bit 3 (value 8)
+    bit0: 10  # GPIO pin for bit 0 (value 1) - ST1
+    bit1: 9   # GPIO pin for bit 1 (value 2) - ST2
+    bit2: 22  # GPIO pin for bit 2 (value 4) - ST4
+    bit3: 17  # GPIO pin for bit 3 (value 8) - ST8
   
   # Bank Selector BCD Switch
   bank_switch:
-    bit0: 13  # GPIO pin for bit 0 (value 1)
-    bit1: 6   # GPIO pin for bit 1 (value 2)
-    bit2: 5   # GPIO pin for bit 2 (value 4)
-    bit3: 11  # GPIO pin for bit 3 (value 8)
+    bit0: 5   # GPIO pin for bit 0 (value 1) - BK1
+    bit1: 6   # GPIO pin for bit 1 (value 2) - BK2
+    bit2: 13  # GPIO pin for bit 2 (value 4) - BK4
+    bit3: 11  # GPIO pin for bit 3 (value 8) - BK8
   
   # Shuffle Mode Switch (optional)
   shuffle_switch: 24  # GPIO pin for shuffle mode ON/OFF switch
