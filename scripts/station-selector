@@ -25,8 +25,8 @@ def load_config():
         print(f"Warning: Could not load {CONFIG_FILE}, using defaults")
         return {
             'gpio': {
-                'station_switch': {'bit0': 9, 'bit1': 10, 'bit2': 22, 'bit3': 17},
-                'bank_switch': {'bit0': 13, 'bit1': 6, 'bit2': 5, 'bit3': 11}
+                'station_switch': {'bit0': 10, 'bit1': 9, 'bit2': 22, 'bit3': 17},
+                'bank_switch': {'bit0': 5, 'bit1': 6, 'bit2': 13, 'bit3': 11}
             }
         }
 
