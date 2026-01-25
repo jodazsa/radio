@@ -1,18 +1,15 @@
 #!/usr/bin/env python3
 """
-volume-control: Monitor rotary encoder and control system volume
-Controls both MPD (streams) and hardware volume (MPV/everything)
-Button press toggles play/pause
+station-selector: Monitor BCD rotary switches and change stations
+Reads two 10-position BCD switches: one for bank (0-9) and one for station (0-9)
 """
 
-import board
-from adafruit_seesaw.seesaw import Seesaw
-from adafruit_seesaw.rotaryio import IncrementalEncoder
-from digitalio import Direction
+import RPi.GPIO as GPIO
 import subprocess
 import time
 import signal
 import sys
+import os
 import yaml
 
 # Load configuration
@@ -27,149 +24,171 @@ def load_config():
         # Fallback to defaults if config not found
         print(f"Warning: Could not load {CONFIG_FILE}, using defaults")
         return {
-            'gpio': {'encoder_i2c_address': 0x36},
-            'volume': {'step': 4, 'min': 50, 'max': 100, 'default': 50},
-            'audio': {'card': 1, 'device': 0}
+            'gpio': {
+                'station_switch': {'bit0': 10, 'bit1': 9, 'bit2': 22, 'bit3': 17},
+                'bank_switch': {'bit0': 5, 'bit1': 6, 'bit2': 13, 'bit3': 11}
+            }
         }
 
 config = load_config()
 
 # Configuration
-ENCODER_ADDR = config['gpio']['encoder_i2c_address']
-VOLUME_STEP = config['volume']['step']
-MIN_VOLUME = config['volume']['min']
-MAX_VOLUME = config['volume']['max']
-DEFAULT_VOLUME = config['volume']['default']
-BUTTON_PIN = 24  # Encoder button pin on seesaw
-AUDIO_CARD = config['audio']['card']
-AUDIO_DEVICE = config['audio']['device']
-MAX_SANE_DELTA = 10  # Ignore encoder deltas larger than this (hardware noise)
+STATION_BCD_PINS = [
+    config['gpio']['station_switch']['bit0'],
+    config['gpio']['station_switch']['bit1'],
+    config['gpio']['station_switch']['bit2'],
+    config['gpio']['station_switch']['bit3']
+]
+BANK_BCD_PINS = [
+    config['gpio']['bank_switch']['bit0'],
+    config['gpio']['bank_switch']['bit1'],
+    config['gpio']['bank_switch']['bit2'],
+    config['gpio']['bank_switch']['bit3']
+]
+STATE_FILE = "/home/radio/.radio-state"
+CHECK_INTERVAL = 0.1  # How often to check switch position (seconds)
 
-# Global volume state
-current_volume = DEFAULT_VOLUME
+# Current state
+current_bank = 0
+current_station = 0
 
-def get_current_volume():
-    """Get current volume from MPD"""
+def read_bcd_switch(pins):
+    """Read the current position (0-9) from a BCD switch"""
+    value = 0
+    for i, pin in enumerate(pins):
+        # Pins are pulled HIGH, switch pulls them LOW
+        # So we need to invert: if LOW (0), bit is active (1)
+        if GPIO.input(pin) == GPIO.LOW:
+            value |= (1 << i)
+    return value
+
+def load_state():
+    """Load current bank and station from state file"""
+    global current_bank, current_station
     try:
-        result = subprocess.run(['mpc', 'volume'], capture_output=True, text=True)
-        # Output format: "volume: 50%"
-        if 'volume:' in result.stdout:
-            vol_str = result.stdout.split(':')[1].strip().rstrip('%')
-            return int(vol_str)
+        if os.path.exists(STATE_FILE):
+            with open(STATE_FILE, 'r') as f:
+                for line in f:
+                    if line.startswith('current_bank='):
+                        current_bank = int(line.split('=')[1].strip())
+                    elif line.startswith('current_station='):
+                        current_station = int(line.split('=')[1].strip())
     except:
         pass
-    return DEFAULT_VOLUME
+    print(f"Loaded state: Bank {current_bank}, Station {current_station}")
 
-def set_volume(volume):
-    """Set volume for both MPD and ALSA hardware"""
-    volume = max(MIN_VOLUME, min(MAX_VOLUME, volume))
-    
-    # Set MPD volume (for streams)
-    subprocess.run(['mpc', 'volume', str(volume)], 
-                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    
-    # Set ALSA Digital volume (for MPV and everything else)
-    # Digital control goes from 0-207, map our 0-100 to that range
-    alsa_volume = int((volume / 100.0) * 207)
-    subprocess.run(['amixer', 'set', 'Digital', str(alsa_volume)],
-                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    
-    print(f"Volume: {volume}%")
-    return volume
-
-def is_mpd_playing():
-    """Check if MPD is currently playing"""
+def save_state(bank, station):
+    """Save current bank and station to state file"""
     try:
-        result = subprocess.run(['mpc', 'status'], capture_output=True, text=True)
-        return '[playing]' in result.stdout
+        with open(STATE_FILE, 'w') as f:
+            f.write(f"current_bank={bank}\n")
+            f.write(f"current_station={station}\n")
     except:
-        return False
+        pass
 
-def toggle_playback():
-    """Toggle play/pause for MPD"""
+def play_station(bank, station):
+    """Play a station using radio-play"""
+    msg = f"Switching to Bank {bank}, Station {station}"
+    print(msg)
+    # Also write to a log file
     try:
-        result = subprocess.run(['mpc', 'toggle'], capture_output=True, text=True)
-        
-        # Check new state
-        status = subprocess.run(['mpc', 'status'], capture_output=True, text=True)
-        if '[playing]' in status.stdout:
-            print("Playing")
-        elif '[paused]' in status.stdout:
-            print("Paused")
-        else:
-            print("Stopped")
-    except Exception as e:
-        print(f"Error toggling playback: {e}")
+        with open('/home/radio/station.log', 'a') as f:
+            import datetime
+            timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            f.write(f"{timestamp} - {msg}\n")
+    except:
+        pass
+    
+    # Call radio-play and capture its output
+    result = subprocess.run(['radio-play', str(bank), str(station)],
+                           capture_output=True, text=True)
+    if result.stdout:
+        print(result.stdout.strip())
+        try:
+            with open('/home/radio/station.log', 'a') as f:
+                f.write(f"{result.stdout.strip()}\n")
+        except:
+            pass
+    
+    save_state(bank, station)
 
 def signal_handler(sig, frame):
     """Handle Ctrl+C gracefully"""
-    print("\nVolume control stopped")
+    print("\nStation selector stopped")
+    GPIO.cleanup()
     sys.exit(0)
 
 def main():
-    global current_volume
+    global current_bank, current_station
     
     # Set up signal handler
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
     
-    # Initialize I2C and encoder
-    print("Starting volume control...")
-    i2c = board.I2C()
-    seesaw = Seesaw(i2c, addr=ENCODER_ADDR)
-    encoder = IncrementalEncoder(seesaw)
+    # Set up GPIO
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setwarnings(False)
     
-    # Set up button
-    seesaw.pin_mode(BUTTON_PIN, seesaw.INPUT_PULLUP)
+    # Configure station selector BCD pins as inputs with pull-up resistors
+    for pin in STATION_BCD_PINS:
+        GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     
-    # Get initial volume from MPD
-    current_volume = get_current_volume()
-    print(f"Initial volume: {current_volume}%")
+    # Configure bank selector BCD pins as inputs with pull-up resistors
+    for pin in BANK_BCD_PINS:
+        GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     
-    # Set initial volume to sync everything
-    set_volume(current_volume)
+    # Give GPIO time to stabilize
+    time.sleep(0.5)
     
-    last_position = encoder.position
-    button_held = False
+    print("Starting station selector...")
     
-    print("Volume control ready. Turn encoder to adjust volume, press to play/pause.")
+    # Load current state
+    load_state()
+    
+    # Get initial switch positions
+    last_bank_position = read_bcd_switch(BANK_BCD_PINS)
+    last_station_position = read_bcd_switch(STATION_BCD_PINS)
+    print(f"Initial bank switch position: {last_bank_position}")
+    print(f"Initial station switch position: {last_station_position}")
+    
+    print("Station selector ready. Turn switches to change bank/station.")
     
     try:
         while True:
-            # Handle encoder rotation
-            position = encoder.position
+            # Read current switch positions
+            bank_position = read_bcd_switch(BANK_BCD_PINS)
+            station_position = read_bcd_switch(STATION_BCD_PINS)
             
-            if position != last_position:
-                # Calculate volume change (reversed direction)
-                delta = position - last_position
+            # Check if bank switch changed
+            if bank_position != last_bank_position:
+                print(f"Bank switch moved to position {bank_position}")
                 
-                # Apply noise filter - ignore jumps that are too large
-                if abs(delta) > MAX_SANE_DELTA:
-                    print(f"Ignoring noisy encoder delta: {delta}")
-                    last_position = position
-                else:
-                    current_volume += (delta * -1) * VOLUME_STEP
-                    
-                    # Set new volume
-                    current_volume = set_volume(current_volume)
-                    
-                    last_position = position
+                # If bank changed, play station 0 of new bank
+                # Or play the current station position if it's valid
+                if bank_position != current_bank:
+                    current_bank = bank_position
+                    # Use current station position or 0 if invalid
+                    play_station(current_bank, station_position)
+                    current_station = station_position
+                
+                last_bank_position = bank_position
             
-            # Handle button press
-            button_pressed = not seesaw.digital_read(BUTTON_PIN)
+            # Check if station switch changed
+            if station_position != last_station_position:
+                print(f"Station switch moved to position {station_position}")
+                
+                # Update to new station in current bank
+                if station_position != current_station:
+                    play_station(current_bank, station_position)
+                    current_station = station_position
+                
+                last_station_position = station_position
             
-            if button_pressed and not button_held:
-                # Button just pressed
-                toggle_playback()
-                button_held = True
-            elif not button_pressed and button_held:
-                # Button released
-                button_held = False
-            
-            time.sleep(0.01)
+            time.sleep(CHECK_INTERVAL)
             
     except Exception as e:
         print(f"Error: {e}")
+        GPIO.cleanup()
         sys.exit(1)
 
 if __name__ == '__main__':
