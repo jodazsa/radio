@@ -445,9 +445,9 @@ banks:
         type: mp3_dir_random_start_then_in_order
         dir: "recordedshows/7 Henry Rollins"    
       8:
-        name: "Artist in Residence"
-        type: mp3_dir_random_start_then_in_order
-        dir: "recordedshows/8 Artist In residence"    
+        name: "Muji BGM 1980-2000"
+        type: mp3_loop_random_start
+        dir: "recordedshows/Muji BGM 1980-2000.mp3"    
       9:
         name: "Alice Cooper"
         type: mp3_dir_random_start_then_in_order
