@@ -71,8 +71,7 @@ banks:
       4:
         name: "Klassik 1 - Berlin"
         type: stream
-        url: "http://www.klassik1.de/listen.m3u"
-        # NOT WORKING?
+        url: "https://icepool.silvacast.com/KLASSIK1.mp3"
       5:
         name: "WQXR"
         type: stream
@@ -81,6 +80,7 @@ banks:
         name: "KQAC"
         type: stream
         url: "https://allclassical.streamguys1.com/ac128kmp3"
+        # PLAYS AD FIRST
       7:
         name: "WDAV - Davidson College NC"
         type: stream
