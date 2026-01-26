@@ -9,7 +9,7 @@ KMKB Marfa texas https://radio.tropicsradio.org/kmkb
 WKCR Columbia https://wkcr.streamguys1.com/live 
 WNYU http://cinema.acs.its.nyu.edu:8000/wnyu128.mp3 
 WCBN University of Michigan https://floyd.wcbn.org:8443/wcbn-hd.mp3 
-KVCU
+KVCU Boulder https://kvcu.streamguys1.com/live
 KSPC
 WKNC
 KALX
@@ -72,12 +72,8 @@ https://tunein.com/radio/Live-Stream-News-Radio-c57922/
 https://18153.live.streamtheworld.com/WTOPFM.mp
 
 
-Pre-Recorded Audio:
-MUJI BGM
-War of the worlds
-
-
 Around the world
+Shohan Beach FM (Japan) www.beachfm.co.jp/radio/
 Key West
 Japan
 South Korea 
