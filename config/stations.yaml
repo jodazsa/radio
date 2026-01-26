@@ -32,7 +32,6 @@ banks:
         name: "WPFW"
         type: stream
         url: "https://streams.pacifica.org:9000/wpfw_128"
-        # ERROR:  May be due to an ad...
       6:
         name: "KUVO"
         type: stream
