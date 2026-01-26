@@ -23,13 +23,13 @@ https://radio.garden/listen/radio-2xx-98-3fm/WsZo2gNF
 https://fogpointradio.com 
 WGXC - https://wavefarm.org/radio/wgxc/schedule 
 Roll fm Finland
-WXPN
+WXPN  https://xpn.org/
 FM4 Austria
 KUTX
 WBER
 Inhailer
 Chirp Radio
-Lightning 100
+Lightning 100   https://lightning100.com/
 90.9 WMPG community radio out of Portland, Maine
 KMRD 96.9 FM Madrid, New Mexico
 WFMU
@@ -55,6 +55,8 @@ KSHE 95 https://19013.live.streamtheworld.com/KSHEFMAAC.aac
 WXYG - The Goat, Sauk Rapids MN
 https://www.sorradio.com/
 97.1 WDRV Chicago The Drive 
+https://www.wbls.com/         R&B
+
 
 News Stations
 NPR News https://fm939.wnyc.org/wnycfm
