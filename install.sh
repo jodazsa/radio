@@ -7,6 +7,7 @@ VOLUME_SCRIPT="volume-control"
 SELECTOR_SCRIPT="station-selector"
 STATUS_SCRIPT="radio-status"
 UPDATE_SCRIPT="update-stations.sh"
+DISPLAY_SCRIPT="station-display"
 SHUFFLE_SCRIPT="shuffle-mode"
 
 echo "Updating radio setup from GitHub..."
@@ -31,6 +32,19 @@ sudo chmod +x /usr/local/bin/$SELECTOR_SCRIPT
 echo "Installing $STATUS_SCRIPT..."
 sudo cp scripts/$STATUS_SCRIPT /usr/local/bin/
 sudo chmod +x /usr/local/bin/$STATUS_SCRIPT
+
+echo "Installing $DISPLAY_SCRIPT..."
+sudo cp scripts/$DISPLAY_SCRIPT /usr/local/bin/
+sudo chmod +x /usr/local/bin/$DISPLAY_SCRIPT
+
+echo "Installing display server..."
+sudo cp scripts/display-server /usr/local/bin/
+sudo chmod +x /usr/local/bin/display-server
+sudo cp config/display.html /usr/local/share/radio-display.html
+
+echo "Installing RSS generator..."
+sudo cp scripts/rss-generator /usr/local/bin/
+sudo chmod +x /usr/local/bin/rss-generator
 
 echo "Installing $SHUFFLE_SCRIPT..."
 sudo cp scripts/$SHUFFLE_SCRIPT /usr/local/bin/
@@ -64,6 +78,23 @@ sudo cp services/radio-update-stations.timer /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable radio-update-stations.timer
 sudo systemctl start radio-update-stations.timer
+
+echo "Installing station display service (optional - for HDMI displays)..."
+sudo cp services/station-display.service /etc/systemd/system/
+sudo cp services/display-server.service /etc/systemd/system/
+sudo cp services/display-browser.service /etc/systemd/system/
+sudo systemctl daemon-reload
+# Don't enable by default - user can enable if they have a display
+echo "Note: To enable display, run:"
+echo "  sudo systemctl enable --now display-server"
+echo "  sudo systemctl enable --now display-browser"
+
+echo "Installing RSS generator service..."
+sudo cp services/rss-generator.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable rss-generator.service
+sudo systemctl restart rss-generator.service
+echo "RSS feed will be available at http://[pi-ip-address]/radio.rss"
 
 # Copy config to home directory
 echo "Updating stations.yaml..."
