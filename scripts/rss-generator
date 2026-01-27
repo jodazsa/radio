@@ -1,0 +1,165 @@
+#!/usr/bin/env python3
+"""
+rss-generator: Generate RSS feed with current station info
+Updates every time station changes
+"""
+
+import yaml
+import os
+import subprocess
+from datetime import datetime
+from xml.etree.ElementTree import Element, SubElement, tostring
+from xml.dom import minidom
+
+STATE_FILE = "/home/radio/.radio-state"
+STATIONS_FILE = "/home/radio/stations.yaml"
+RSS_FILE = "/var/www/html/radio.rss"
+FEED_TITLE = "Internet Radio - Now Playing"
+FEED_DESCRIPTION = "Currently playing station on internet radio"
+FEED_LINK = "http://localhost"  # Will be updated with actual IP
+
+def load_state():
+    """Load current bank and station"""
+    bank = 0
+    station = 0
+    try:
+        if os.path.exists(STATE_FILE):
+            with open(STATE_FILE, 'r') as f:
+                for line in f:
+                    if line.startswith('current_bank='):
+                        bank = int(line.split('=')[1].strip())
+                    elif line.startswith('current_station='):
+                        station = int(line.split('=')[1].strip())
+    except:
+        pass
+    return bank, station
+
+def load_stations():
+    """Load stations YAML"""
+    try:
+        with open(STATIONS_FILE, 'r') as f:
+            data = yaml.safe_load(f)
+        return data['banks']
+    except:
+        return {}
+
+def get_status():
+    """Get playback status, volume, and stream metadata"""
+    try:
+        result = subprocess.run(['mpc', 'status'], capture_output=True, text=True)
+        output = result.stdout
+        
+        if '[playing]' in output:
+            state = "PLAYING"
+        elif '[paused]' in output:
+            state = "PAUSED"
+        else:
+            state = "STOPPED"
+        
+        volume = "?"
+        for line in output.split('\n'):
+            if 'volume:' in line:
+                volume = line.split('volume:')[1].strip().split()[0]
+                break
+        
+        return state, volume
+    except:
+        return "UNKNOWN", "?"
+
+def get_stream_metadata():
+    """Get current song/show info from MPD"""
+    try:
+        result = subprocess.run(['mpc', 'current'], capture_output=True, text=True)
+        metadata = result.stdout.strip()
+        if metadata:
+            return metadata
+        return None
+    except:
+        return None
+
+def is_mpv_playing():
+    """Check if MPV is running"""
+    try:
+        result = subprocess.run(['pgrep', 'mpv'], capture_output=True)
+        return result.returncode == 0
+    except:
+        return False
+
+def generate_rss():
+    """Generate RSS feed"""
+    bank_num, station_num = load_state()
+    banks = load_stations()
+    mpd_state, volume = get_status()
+    mpv_playing = is_mpv_playing()
+    stream_metadata = get_stream_metadata()
+    
+    # Determine playback state
+    if mpv_playing:
+        playback_state = "PLAYING"
+    else:
+        playback_state = mpd_state
+    
+    # Get station info
+    if bank_num in banks and station_num in banks[bank_num]['stations']:
+        bank = banks[bank_num]
+        station = banks[bank_num]['stations'][station_num]
+        bank_name = bank['name']
+        station_name = station['name']
+    else:
+        bank_name = f"Bank {bank_num}"
+        station_name = f"Station {station_num}"
+    
+    # Build RSS feed
+    rss = Element('rss', version='2.0')
+    channel = SubElement(rss, 'channel')
+    
+    SubElement(channel, 'title').text = FEED_TITLE
+    SubElement(channel, 'description').text = FEED_DESCRIPTION
+    SubElement(channel, 'link').text = FEED_LINK
+    SubElement(channel, 'lastBuildDate').text = datetime.utcnow().strftime('%a, %d %b %Y %H:%M:%S GMT')
+    
+    # Create single item with current station
+    item = SubElement(channel, 'item')
+    
+    # Title: Compact format for ticker display
+    title_parts = [
+        f"Bank {bank_num} Station {station_num}",
+        f"Vol {volume}",
+        playback_state
+    ]
+    SubElement(item, 'title').text = " • ".join(title_parts)
+    
+    # Description: Full details with metadata
+    description_lines = [
+        f"BANK {bank_num} | STATION {station_num} | VOLUME {volume}",
+        "",
+        f"{bank_name} - {station_name}",
+    ]
+    
+    if stream_metadata:
+        description_lines.append("")
+        description_lines.append("NOW PLAYING:")
+        description_lines.append(stream_metadata)
+    
+    description_lines.append("")
+    description_lines.append(f"Status: {playback_state}")
+    description_lines.append(f"Updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    
+    SubElement(item, 'description').text = "\n".join(description_lines)
+    SubElement(item, 'pubDate').text = datetime.utcnow().strftime('%a, %d %b %Y %H:%M:%S GMT')
+    SubElement(item, 'guid', isPermaLink='false').text = f"station-{bank_num}-{station_num}-{int(datetime.now().timestamp())}"
+    
+    # Pretty print XML
+    rough_string = tostring(rss, 'utf-8')
+    reparsed = minidom.parseString(rough_string)
+    pretty_xml = reparsed.toprettyxml(indent="  ")
+    
+    # Write to file
+    os.makedirs(os.path.dirname(RSS_FILE), exist_ok=True)
+    with open(RSS_FILE, 'w') as f:
+        f.write(pretty_xml)
+    
+    print(f"RSS updated: B{bank_num} S{station_num} - {station_name} - {playback_state}")
+
+if __name__ == '__main__':
+    generate_rss()
