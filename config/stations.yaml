@@ -434,7 +434,7 @@ banks:
       5:
         name: "Marian McPartlan"
         type: mp3_dir_random_start_then_in_order
-        dir: "recordedshows/5 Marian McPartlan"    
+        dir: "recordedshows/5 Marian McPartland"    
       6:
         name: "Paul McCartney"
         type: mp3_dir_random_start_then_in_order
