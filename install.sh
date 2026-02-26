@@ -54,6 +54,8 @@ sudo chmod 755 /home/radio /home/radio/audio /home/radio/logs
 echo "→ Installing radio files..."
 sudo cp "$SCRIPT_DIR/radio.py" /usr/local/bin/radio.py
 sudo chmod +x /usr/local/bin/radio.py
+sudo cp "$SCRIPT_DIR/web.py" /usr/local/bin/web.py
+sudo chmod +x /usr/local/bin/web.py
 
 # Copy stations.yaml only if not already present (don't overwrite edits)
 if [ ! -f /home/radio/stations.yaml ]; then
@@ -94,12 +96,16 @@ MPDCONF
 sudo systemctl restart mpd
 sudo systemctl enable mpd
 
-# 8. Install systemd service
+# 8. Install systemd services
 echo "→ Installing radio service..."
 sudo cp "$SCRIPT_DIR/radio.service" /etc/systemd/system/radio.service
+sudo cp "$SCRIPT_DIR/radio-web.service" /etc/systemd/system/radio-web.service
 sudo systemctl daemon-reload
 sudo systemctl enable radio
 sudo systemctl start radio
+echo "→ Installing radio web UI service..."
+sudo systemctl enable radio-web
+sudo systemctl start radio-web
 
 # ── 9. Power loss resilience hardening ─────────────────────
 echo ""
@@ -192,7 +198,10 @@ echo "  sudo reboot"
 echo ""
 echo "After reboot, check status with:"
 echo "  sudo systemctl status radio"
+echo "  sudo systemctl status radio-web"
 echo "  sudo journalctl -u radio -f"
+echo ""
+echo "Web UI available at http://<pi-ip>:8080"
 echo ""
 echo "Power loss resilience features enabled:"
 echo "  ✓ Hardware watchdog (auto-reboot on system hang)"
