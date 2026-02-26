@@ -49,16 +49,18 @@ Boot the Pi and SSH in.
 Option A — clone from a repo (if you push these files to GitHub):
 ```bash
 cd ~
-git clone https://github.com/YOUR_USER/radio-simple.git
-cd radio-simple
+sudo apt update
+sudo apt install -y git
+git clone https://github.com/jodazsa/radio.git
+cd radio
 ```
 
 Option B — copy files manually:
 ```bash
 # From your computer:
-scp -r radio-simple/ radio@radio.local:~/radio-simple/
+scp -r radio/ pi@radio.local:~/radio/
 # Then on the Pi:
-cd ~/radio-simple
+cd ~/radio
 ```
 
 ## Step 3: Run the installer
