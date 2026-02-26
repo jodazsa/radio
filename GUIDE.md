@@ -6,14 +6,14 @@
 |----------|-----------|-----|
 | 15+ files, ~5,500 lines | **4 files, ~400 lines** | Less to break, easier to understand |
 | Separate `rotary-controller`, `radio-play`, `radio_lib.py` | **Single `radio.py`** | One file does everything |
-| 1,076-line web backend + 1,824-line web UI | **Removed** | MPD is still there — bolt on a web UI later if needed |
+| 1,076-line web backend + 1,824-line web UI | **Tiny built-in web UI** | Minimal browser control on your local network |
 | Auto-update stations from GitHub | **Removed** | Edit `stations.yaml` directly on the Pi |
 | WiFi AP fallback + provisioning | **Removed** | Set up WiFi with `raspi-config` or Pi Imager |
 | Fuzzy media matching (roman numerals, legacy prefixes) | **Removed** | Just use correct paths |
 | 6 station types with aliases | **3 types: `stream`, `file`, `dir`** | Covers all real usage |
 | BCD decode maps, stability windows, glitch filters | **Simple debounce only** | Kept minimal; add back if switches misbehave |
 | Playback watchdog with exponential backoff | **Simple watchdog** | Restarts dead streams, no complex backoff |
-| 5 systemd services + 1 timer | **1 systemd service** | Just runs `radio.py` |
+| 5 systemd services + 1 timer | **2 systemd services** | `radio.py` + small `radio_web.py` web control |
 | Full config validation (50+ checks) | **Fail-fast on missing keys** | Python will tell you what's wrong |
 | `deploy-rotary.sh` + `install-rotary.sh` | **Single `install.sh`** | One script, run once |
 
@@ -27,7 +27,9 @@ radio-simple/
 ├── install.sh            ← Run once on a fresh Pi
 ├── radio.py              ← The entire radio controller
 ├── stations.yaml         ← Your stations (edit this)
-└── radio.service         ← Systemd unit file
+├── radio.service         ← Main radio controller service
+├── radio-web.service     ← Web UI service
+└── radio_web.py          ← Simple browser control app
 ```
 
 ---
@@ -77,7 +79,7 @@ This will:
 4. Create the `radio` user and directories
 5. Configure MPD and the HiFiBerry DAC
 6. Copy `radio.py` and `stations.yaml` into place
-7. Install and start the systemd service
+7. Install and start the systemd services
 
 **Reboot when prompted:**
 ```bash
@@ -90,7 +92,7 @@ After reboot, SSH back in and check:
 
 ```bash
 # Is the service running?
-sudo systemctl status radio
+sudo systemctl status radio radio-web
 
 # Can you see the I2C volume encoder?
 i2cdetect -y 1    # Should show device at 0x36
@@ -99,10 +101,28 @@ i2cdetect -y 1    # Should show device at 0x36
 mpc status
 
 # Watch the logs live
-sudo journalctl -u radio -f
+sudo journalctl -u radio -u radio-web -f
 ```
 
 Turn the station and bank switches — you should hear audio and see log entries.
+
+
+## Browser control (same network)
+
+A simple web interface is now included. After install/reboot:
+
+```bash
+# Find your Pi IP
+hostname -I
+
+# Open from phone/laptop browser on same network
+http://<pi-ip>:8080
+```
+
+From the page, you can:
+- Pick any station from `stations.yaml` and play it
+- Play/pause or stop
+- Adjust volume in ±5 steps
 
 ## Step 5: Edit your stations
 
