@@ -1,0 +1,15 @@
+[Unit]
+Description=Pi Radio Controller
+After=mpd.service
+Wants=mpd.service
+
+[Service]
+ExecStart=/usr/bin/python3 /usr/local/bin/radio.py
+Restart=always
+RestartSec=5
+User=root
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

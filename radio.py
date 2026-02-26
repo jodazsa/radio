@@ -1,0 +1,463 @@
+#!/usr/bin/env python3
+"""Simplified Raspberry Pi radio controller.
+
+Single script that handles:
+- BCD rotary switches for bank/station selection
+- I2C volume encoder (Adafruit Seesaw)
+- Play/pause toggle switch
+- MPD playback via mpc commands
+- Stream watchdog (auto-restarts dead streams)
+"""
+
+import logging
+import os
+import random
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+import board
+import busio
+import RPi.GPIO as GPIO
+import yaml
+from adafruit_seesaw.seesaw import Seesaw
+from adafruit_seesaw.rotaryio import IncrementalEncoder
+
+# ── Paths ──────────────────────────────────────────────────
+STATIONS_PATH = Path("/home/radio/stations.yaml")
+AUDIO_ROOT = Path("/home/radio/audio")
+AUDIO_EXTS = (".mp3", ".flac", ".ogg", ".m4a", ".wav", ".aac")
+
+# ── Hardware pin mappings ──────────────────────────────────
+# Station BCD switch
+STATION_PINS = {"bit0": 9, "bit1": 10, "bit2": 22, "bit3": 17}
+# Bank BCD switch
+BANK_PINS = {"bit0": 5, "bit1": 6, "bit2": 13, "bit3": 11}
+# Play/pause toggle switch
+PLAY_PAUSE_PIN = 24
+# Volume encoder I2C address and Seesaw button pin
+VOLUME_I2C_ADDR = 0x36
+SEESAW_BUTTON_PIN = 24
+
+# ── Tuning ─────────────────────────────────────────────────
+POLL_INTERVAL = 0.1       # Main loop sleep (seconds)
+DEBOUNCE_TIME = 0.15      # Ignore switch changes faster than this
+VOLUME_STEP = 4           # Volume change per encoder click
+VOLUME_MIN = 0
+VOLUME_MAX = 100
+DEFAULT_VOLUME = 60
+WATCHDOG_INTERVAL = 10.0  # Seconds between stream health checks
+WATCHDOG_GRACE = 15.0     # Wait this long before restarting a dead stream
+
+# ── Logging ────────────────────────────────────────────────
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(message)s",
+    datefmt="%H:%M:%S",
+)
+log = logging.getLogger("radio")
+
+
+# ── Helpers ────────────────────────────────────────────────
+
+def mpc(*args):
+    """Run an mpc command, return stdout. Swallow errors."""
+    try:
+        r = subprocess.run(
+            ["mpc"] + list(args),
+            capture_output=True, text=True, timeout=10,
+        )
+        return r.stdout.strip()
+    except Exception as e:
+        log.warning("mpc %s failed: %s", " ".join(args), e)
+        return ""
+
+
+def read_bcd(pins: dict) -> int:
+    """Read 4-bit BCD value from GPIO pins (active LOW)."""
+    val = 0
+    if GPIO.input(pins["bit0"]) == GPIO.LOW: val += 1
+    if GPIO.input(pins["bit1"]) == GPIO.LOW: val += 2
+    if GPIO.input(pins["bit2"]) == GPIO.LOW: val += 4
+    if GPIO.input(pins["bit3"]) == GPIO.LOW: val += 8
+    return val
+
+
+def load_stations():
+    """Load and return stations.yaml as a dict."""
+    if not STATIONS_PATH.exists():
+        log.error("stations.yaml not found at %s", STATIONS_PATH)
+        return {}
+    with open(STATIONS_PATH) as f:
+        return yaml.safe_load(f) or {}
+
+
+def get_station(data, bank_id, station_id):
+    """Look up a station entry. Returns (bank_dict, station_dict) or (None, None)."""
+    banks = data.get("banks", {})
+    bank = banks.get(bank_id)
+    if not isinstance(bank, dict):
+        return None, None
+    stations = bank.get("stations", {})
+    station = stations.get(station_id)
+    if not isinstance(station, dict):
+        return None, None
+    return bank, station
+
+
+def clamp(val, lo, hi):
+    return max(lo, min(hi, val))
+
+
+# ── Playback ───────────────────────────────────────────────
+
+def play_stream(url):
+    """Play an internet radio stream."""
+    log.info("Playing stream: %s", url)
+    mpc("clear")
+    mpc("add", url)
+    mpc("play")
+
+
+def play_file(path_str):
+    """Play a single local file on loop, starting at a random position."""
+    resolved = _resolve_path(path_str)
+    if not resolved.exists():
+        log.error("File not found: %s", resolved)
+        return
+
+    rel = _mpd_relpath(resolved)
+    log.info("Playing file (loop): %s", rel)
+    mpc("clear")
+    mpc("repeat", "off")
+    mpc("single", "off")
+    mpc("random", "off")
+    mpc("add", rel)
+    mpc("repeat", "on")
+    mpc("play")
+    # Random seek into the track
+    time.sleep(0.3)
+    _seek_random()
+
+
+def play_dir(path_str):
+    """Play all audio files in a directory, starting at a random track."""
+    resolved = _resolve_path(path_str)
+    if not resolved.is_dir():
+        log.error("Directory not found: %s", resolved)
+        return
+
+    files = sorted(
+        [f for f in resolved.rglob("*") if f.suffix.lower() in AUDIO_EXTS],
+        key=lambda p: str(p).lower(),
+    )
+    if not files:
+        log.error("No audio files in: %s", resolved)
+        return
+
+    log.info("Playing directory: %s (%d files)", resolved, len(files))
+    mpc("clear")
+    mpc("repeat", "off")
+    mpc("single", "off")
+    mpc("random", "off")
+    for f in files:
+        mpc("add", _mpd_relpath(f))
+
+    start = random.randint(1, len(files))
+    mpc("play", str(start))
+
+
+def _resolve_path(raw: str) -> Path:
+    """Resolve a station path relative to AUDIO_ROOT."""
+    raw = raw.strip()
+    if raw.startswith("/"):
+        return Path(raw)
+    return AUDIO_ROOT / raw
+
+
+def _mpd_relpath(path: Path) -> str:
+    """Convert absolute path to MPD-relative path (relative to AUDIO_ROOT)."""
+    try:
+        return str(path.resolve().relative_to(AUDIO_ROOT.resolve()))
+    except ValueError:
+        log.error("Path outside audio root: %s", path)
+        return str(path)
+
+
+def _seek_random():
+    """Seek to a random position in the current track."""
+    output = mpc("status")
+    for line in output.splitlines():
+        if "/" in line and ":" in line and "%" in line:
+            # Parse something like "   [playing] #1/1   0:05/3:42 (2%)"
+            for token in line.split():
+                if "/" in token and ":" in token:
+                    try:
+                        _, total_str = token.split("/", 1)
+                        parts = [int(p) for p in total_str.split(":")]
+                        if len(parts) == 2:
+                            total_sec = parts[0] * 60 + parts[1]
+                        elif len(parts) == 3:
+                            total_sec = parts[0] * 3600 + parts[1] * 60 + parts[2]
+                        else:
+                            return
+                        if total_sec > 10:
+                            target = random.randint(0, total_sec - 5)
+                            mpc("seek", str(target))
+                    except (ValueError, IndexError):
+                        pass
+                    return
+
+
+def play_station(data, bank_id, station_id):
+    """Play a station by bank/station ID. Returns True if successful."""
+    bank, station = get_station(data, bank_id, station_id)
+    if station is None:
+        log.warning("Station not found: bank=%d station=%d", bank_id, station_id)
+        return False
+
+    name = station.get("name", f"Bank {bank_id} / Station {station_id}")
+    stype = station.get("type", "").strip().lower()
+    log.info("▶ %s [%s]", name, stype)
+
+    if stype == "stream":
+        url = station.get("url", "").strip()
+        if not url:
+            log.error("Stream station '%s' has no url", name)
+            return False
+        play_stream(url)
+        return True
+
+    if stype == "file":
+        path = station.get("path", "").strip()
+        if not path:
+            log.error("File station '%s' has no path", name)
+            return False
+        play_file(path)
+        return True
+
+    if stype == "dir":
+        path = station.get("path", "").strip()
+        if not path:
+            log.error("Dir station '%s' has no path", name)
+            return False
+        play_dir(path)
+        return True
+
+    # Handle legacy type names from the old stations.yaml
+    if stype in ("mp3_loop_random_start", "file_loop_random_start", "file_loop"):
+        path = (station.get("path") or station.get("file", "")).strip()
+        if path:
+            play_file(path)
+            return True
+
+    if stype in ("mp3_dir_random_start_then_in_order", "dir_random_start_then_in_order", "directory"):
+        path = (station.get("path") or station.get("directory") or station.get("dir", "")).strip()
+        if path:
+            play_dir(path)
+            return True
+
+    log.error("Unknown station type '%s' for '%s'", stype, name)
+    return False
+
+
+# ── Main loop ──────────────────────────────────────────────
+
+def wait_for_mpd(retries=15, delay=2.0):
+    """Block until MPD is reachable."""
+    for i in range(retries):
+        r = subprocess.run(["mpc", "status"], capture_output=True, text=True)
+        if r.returncode == 0:
+            log.info("MPD ready (attempt %d/%d)", i + 1, retries)
+            return True
+        log.warning("Waiting for MPD... (%d/%d)", i + 1, retries)
+        time.sleep(delay)
+    log.error("MPD not available after %d attempts", retries)
+    return False
+
+
+def main():
+    log.info("=" * 40)
+    log.info("Radio controller starting")
+    log.info("=" * 40)
+
+    if not wait_for_mpd():
+        sys.exit(1)
+
+    # ── GPIO setup ──
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setwarnings(False)
+    all_pins = (
+        list(STATION_PINS.values())
+        + list(BANK_PINS.values())
+        + [PLAY_PAUSE_PIN]
+    )
+    for pin in all_pins:
+        GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+    # ── I2C / volume encoder setup ──
+    try:
+        i2c = busio.I2C(board.SCL, board.SDA)
+        seesaw = Seesaw(i2c, addr=VOLUME_I2C_ADDR)
+        seesaw.pin_mode(SEESAW_BUTTON_PIN, seesaw.INPUT_PULLUP)
+        vol_encoder = IncrementalEncoder(seesaw, 0)
+        last_vol_pos = vol_encoder.position
+        last_button = seesaw.digital_read(SEESAW_BUTTON_PIN)
+        log.info("Volume encoder ready at 0x%02x", VOLUME_I2C_ADDR)
+    except Exception as e:
+        log.error("I2C init failed: %s", e)
+        sys.exit(1)
+
+    # ── Load stations and read initial state ──
+    stations_data = load_stations()
+    stations_mtime = STATIONS_PATH.stat().st_mtime if STATIONS_PATH.exists() else 0
+
+    cur_bank = read_bcd(BANK_PINS)
+    cur_station = read_bcd(STATION_PINS)
+    if cur_bank > 9: cur_bank = 0
+    if cur_station > 9: cur_station = 0
+
+    playing_bank = -1
+    playing_station = -1
+    volume = DEFAULT_VOLUME
+    play_enabled = GPIO.input(PLAY_PAUSE_PIN) == GPIO.HIGH
+    last_switch_change = 0.0
+
+    # Set initial volume
+    mpc("volume", str(volume))
+
+    # Play initial station
+    if play_enabled and get_station(stations_data, cur_bank, cur_station)[1]:
+        play_station(stations_data, cur_bank, cur_station)
+        playing_bank = cur_bank
+        playing_station = cur_station
+    elif not play_enabled:
+        log.info("Play/pause switch is OFF at startup — paused")
+        mpc("pause")
+
+    log.info("Initial: bank=%d station=%d volume=%d play=%s",
+             cur_bank, cur_station, volume, play_enabled)
+
+    # ── Watchdog state ──
+    watchdog_last_check = 0.0
+    watchdog_stop_since = 0.0
+
+    # ── Main loop ──
+    log.info("Entering main loop")
+    while True:
+        try:
+            now = time.monotonic()
+
+            # ── Reload stations.yaml if it changed ──
+            try:
+                mt = STATIONS_PATH.stat().st_mtime
+                if mt != stations_mtime:
+                    stations_data = load_stations()
+                    stations_mtime = mt
+                    log.info("Reloaded stations.yaml")
+            except FileNotFoundError:
+                pass
+
+            # ── Read BCD switches ──
+            raw_bank = read_bcd(BANK_PINS)
+            raw_station = read_bcd(STATION_PINS)
+            new_bank = raw_bank if 0 <= raw_bank <= 9 else cur_bank
+            new_station = raw_station if 0 <= raw_station <= 9 else cur_station
+
+            # ── Switch change (with debounce) ──
+            if (new_bank != cur_bank or new_station != cur_station):
+                if now - last_switch_change >= DEBOUNCE_TIME:
+                    last_switch_change = now
+
+                    if new_bank != cur_bank:
+                        log.info("Bank: %d → %d", cur_bank, new_bank)
+                    if new_station != cur_station:
+                        log.info("Station: %d → %d", cur_station, new_station)
+
+                    cur_bank = new_bank
+                    cur_station = new_station
+
+                    # Play new station
+                    if get_station(stations_data, cur_bank, cur_station)[1]:
+                        if cur_bank != playing_bank or cur_station != playing_station:
+                            play_station(stations_data, cur_bank, cur_station)
+                            playing_bank = cur_bank
+                            playing_station = cur_station
+                            watchdog_stop_since = 0.0
+                    else:
+                        log.warning("No station at bank=%d station=%d", cur_bank, cur_station)
+
+            # ── Volume encoder ──
+            try:
+                vol_pos = vol_encoder.position
+            except OSError:
+                vol_pos = last_vol_pos
+                time.sleep(0.1)
+
+            if vol_pos != last_vol_pos:
+                delta = last_vol_pos - vol_pos
+                last_vol_pos = vol_pos
+                volume = clamp(volume + delta * VOLUME_STEP, VOLUME_MIN, VOLUME_MAX)
+                mpc("volume", str(volume))
+                log.debug("Volume: %d", volume)
+
+            # ── Encoder button (play/pause toggle) ──
+            try:
+                btn = seesaw.digital_read(SEESAW_BUTTON_PIN)
+                if last_button == 1 and btn == 0:  # Falling edge
+                    log.info("Encoder button pressed → toggle play/pause")
+                    mpc("toggle")
+                last_button = btn
+            except OSError:
+                pass
+
+            # ── Play/pause switch ──
+            new_play = GPIO.input(PLAY_PAUSE_PIN) == GPIO.HIGH
+            if new_play != play_enabled:
+                play_enabled = new_play
+                if play_enabled:
+                    log.info("Play switch → ON")
+                    if (cur_bank != playing_bank or cur_station != playing_station):
+                        if get_station(stations_data, cur_bank, cur_station)[1]:
+                            play_station(stations_data, cur_bank, cur_station)
+                            playing_bank = cur_bank
+                            playing_station = cur_station
+                    else:
+                        mpc("play")
+                else:
+                    log.info("Play switch → OFF")
+                    mpc("pause")
+
+            # ── Stream watchdog ──
+            if play_enabled and now - watchdog_last_check >= WATCHDOG_INTERVAL:
+                watchdog_last_check = now
+                _, stn = get_station(stations_data, playing_bank, playing_station)
+                if stn and stn.get("type", "").strip().lower() == "stream":
+                    status = mpc("status")
+                    if "[playing]" not in status and "[paused]" not in status:
+                        if watchdog_stop_since == 0.0:
+                            watchdog_stop_since = now
+                            log.warning("Stream appears stopped, waiting %.0fs...", WATCHDOG_GRACE)
+                        elif now - watchdog_stop_since >= WATCHDOG_GRACE:
+                            log.info("Watchdog: restarting stream (bank=%d station=%d)",
+                                     playing_bank, playing_station)
+                            play_station(stations_data, playing_bank, playing_station)
+                            watchdog_stop_since = 0.0
+                    else:
+                        watchdog_stop_since = 0.0
+
+            time.sleep(POLL_INTERVAL)
+
+        except KeyboardInterrupt:
+            log.info("Shutting down")
+            break
+        except Exception as e:
+            log.error("Error: %s", e, exc_info=True)
+            time.sleep(1.0)
+
+    GPIO.cleanup()
+
+
+if __name__ == "__main__":
+    main()
