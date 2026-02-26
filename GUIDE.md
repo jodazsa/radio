@@ -206,6 +206,62 @@ sudo journalctl -u radio -n 50 --no-pager
 
 ---
 
+## Power loss resilience
+
+This radio is designed to survive unplanned power loss and run unattended for years. The installer configures multiple layers of protection:
+
+### What happens on power loss
+
+1. Power is cut — the Pi shuts down immediately (no graceful shutdown)
+2. On power restore, the Pi boots normally
+3. systemd starts MPD, then the radio service
+4. The radio controller restores volume from the saved state file
+5. It reads the physical switch positions and starts the correct station
+6. The stream watchdog monitors for playback health
+
+**Recovery is fully automatic — no user intervention required.**
+
+### Protection layers
+
+| Layer | What it does | Protects against |
+|-------|-------------|-----------------|
+| **State persistence** | Volume saved to `/home/radio/state.json` using atomic writes (write-to-temp, fsync, rename) | Volume reset after power loss |
+| **Hardware watchdog** | `bcm2835_wdt` kernel module reboots the Pi if the OS hangs | Kernel panic, total system hang |
+| **Service watchdog** | systemd restarts radio.py if it stops sending keepalives (30s timeout) | Process hang, deadlock |
+| **Auto-restart** | `Restart=always` in systemd with rate limiting (10 restarts per 5 minutes) | Process crash, unexpected exit |
+| **Signal handling** | SIGTERM handler saves state before exit | Clean shutdown on `systemctl stop` |
+| **Volatile journal** | System logs stored in RAM, not on SD card | SD card wear from logging |
+| **tmpfs mounts** | `/tmp` and `/var/tmp` mounted as RAM disks | SD card wear from temp files |
+| **Filesystem tuning** | `noatime,commit=60` mount options on root | SD card wear from frequent writes |
+| **Swap disabled** | No swap file on SD card | SD card wear from swapping |
+| **Stream watchdog** | Auto-restarts dead internet streams after 15s grace period | Stream server disconnects, network glitches |
+| **Config hot-reload** | `stations.yaml` changes detected without restart (checked every 30s) | Need to edit stations without downtime |
+| **Filesystem health check** | Daily check for ext4 errors and I/O errors in dmesg | Early warning of SD card failure |
+| **Resource limits** | Memory capped at 128M, CPU at 50% | Runaway processes consuming resources |
+| **I2C error handling** | Transient I2C read failures fall back to last known value | Electrical noise, bus contention |
+
+### State file format
+
+The state file at `/home/radio/state.json` uses atomic writes to prevent corruption:
+
+```json
+{"volume": 72, "bank": 3, "station": 5, "timestamp": 1709000000}
+```
+
+- Written at most once every 5 seconds (only when state changes)
+- Uses write-to-temp → fsync → rename pattern (safe against power loss mid-write)
+- If corrupted on read, it's deleted and defaults are used
+- On clean shutdown (SIGTERM), state is saved immediately
+
+### SD card longevity tips
+
+- Use a high-endurance SD card (Samsung PRO Endurance, SanDisk MAX Endurance)
+- The install script already minimizes writes (volatile journal, tmpfs, noatime)
+- Monitor SD health: `sudo dmesg | grep -i "mmc\|error"`
+- Keep a backup SD card with the same setup ready to swap in
+
+---
+
 ## Adding a web UI later
 
 MPD is running on `localhost:6600`. Any MPD web client will work. Popular options:

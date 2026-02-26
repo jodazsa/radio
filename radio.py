@@ -7,13 +7,18 @@ Single script that handles:
 - Play/pause toggle switch
 - MPD playback via mpc commands
 - Stream watchdog (auto-restarts dead streams)
+- State persistence across power loss
+- Systemd watchdog integration
 """
 
+import json
 import logging
 import os
 import random
+import signal
 import subprocess
 import sys
+import tempfile
 import time
 from pathlib import Path
 
@@ -28,6 +33,7 @@ from adafruit_seesaw.rotaryio import IncrementalEncoder
 STATIONS_PATH = Path("/home/radio/stations.yaml")
 AUDIO_ROOT = Path("/home/radio/audio")
 AUDIO_EXTS = (".mp3", ".flac", ".ogg", ".m4a", ".wav", ".aac")
+STATE_PATH = Path("/home/radio/state.json")
 
 # ── Hardware pin mappings ──────────────────────────────────
 # Station BCD switch
@@ -49,14 +55,134 @@ VOLUME_MAX = 100
 DEFAULT_VOLUME = 60
 WATCHDOG_INTERVAL = 10.0  # Seconds between stream health checks
 WATCHDOG_GRACE = 15.0     # Wait this long before restarting a dead stream
+STATE_SAVE_INTERVAL = 5.0 # Seconds between state file writes
+CONFIG_CHECK_INTERVAL = 30.0  # Seconds between stations.yaml mtime checks
 
-# ── Logging ────────────────────────────────────────────────
+# ── Logging ──────────────────────────────────────────────────
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s %(levelname)s %(message)s",
     datefmt="%H:%M:%S",
 )
 log = logging.getLogger("radio")
+
+# ── Shutdown flag ────────────────────────────────────────────
+_shutdown = False
+
+
+def _handle_signal(signum, frame):
+    """Handle SIGTERM/SIGINT for graceful shutdown."""
+    global _shutdown
+    _shutdown = True
+    log.info("Received signal %d, shutting down", signum)
+
+
+signal.signal(signal.SIGTERM, _handle_signal)
+signal.signal(signal.SIGINT, _handle_signal)
+
+
+# ── Systemd watchdog ─────────────────────────────────────────
+
+def _watchdog_enabled():
+    """Check if systemd watchdog is configured."""
+    usec = os.environ.get("WATCHDOG_USEC")
+    return usec is not None and int(usec) > 0
+
+
+def _notify_watchdog():
+    """Send keepalive to systemd watchdog."""
+    try:
+        addr = os.environ.get("NOTIFY_SOCKET")
+        if not addr:
+            return
+        import socket
+        if addr.startswith("@"):
+            addr = "\0" + addr[1:]
+        sock = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
+        try:
+            sock.connect(addr)
+            sock.sendall(b"WATCHDOG=1")
+        finally:
+            sock.close()
+    except Exception:
+        pass
+
+
+def _notify_ready():
+    """Tell systemd we're ready (Type=notify)."""
+    try:
+        addr = os.environ.get("NOTIFY_SOCKET")
+        if not addr:
+            return
+        import socket
+        if addr.startswith("@"):
+            addr = "\0" + addr[1:]
+        sock = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
+        try:
+            sock.connect(addr)
+            sock.sendall(b"READY=1")
+        finally:
+            sock.close()
+    except Exception:
+        pass
+
+
+# ── State persistence ────────────────────────────────────────
+
+def save_state(volume, bank, station):
+    """Atomically save state to disk. Survives power loss during write."""
+    state = {
+        "volume": volume,
+        "bank": bank,
+        "station": station,
+        "timestamp": int(time.time()),
+    }
+    try:
+        dirpath = STATE_PATH.parent
+        fd, tmp_path = tempfile.mkstemp(dir=str(dirpath), suffix=".tmp")
+        try:
+            with os.fdopen(fd, "w") as f:
+                json.dump(state, f)
+                f.flush()
+                os.fsync(f.fileno())
+            os.replace(tmp_path, str(STATE_PATH))
+            # fsync the directory to ensure the rename is durable
+            dfd = os.open(str(dirpath), os.O_RDONLY)
+            try:
+                os.fsync(dfd)
+            finally:
+                os.close(dfd)
+        except Exception:
+            # Clean up temp file on failure
+            try:
+                os.unlink(tmp_path)
+            except OSError:
+                pass
+            raise
+    except Exception as e:
+        log.warning("Failed to save state: %s", e)
+
+
+def load_state():
+    """Load saved state from disk. Returns dict or None."""
+    try:
+        if STATE_PATH.exists():
+            with open(STATE_PATH) as f:
+                data = json.load(f)
+            if isinstance(data, dict) and "volume" in data:
+                log.info("Restored state: volume=%d bank=%d station=%d",
+                         data.get("volume", DEFAULT_VOLUME),
+                         data.get("bank", -1),
+                         data.get("station", -1))
+                return data
+    except (json.JSONDecodeError, OSError) as e:
+        log.warning("Could not load state file: %s", e)
+        # Corrupted state file — remove it so we start fresh
+        try:
+            STATE_PATH.unlink(missing_ok=True)
+        except OSError:
+            pass
+    return None
 
 
 # ── Helpers ────────────────────────────────────────────────
@@ -267,6 +393,8 @@ def play_station(data, bank_id, station_id):
 def wait_for_mpd(retries=15, delay=2.0):
     """Block until MPD is reachable."""
     for i in range(retries):
+        if _shutdown:
+            return False
         r = subprocess.run(["mpc", "status"], capture_output=True, text=True)
         if r.returncode == 0:
             log.info("MPD ready (attempt %d/%d)", i + 1, retries)
@@ -309,6 +437,9 @@ def main():
         log.error("I2C init failed: %s", e)
         sys.exit(1)
 
+    # ── Load saved state (survives power loss) ──
+    saved_state = load_state()
+
     # ── Load stations and read initial state ──
     stations_data = load_stations()
     stations_mtime = STATIONS_PATH.stat().st_mtime if STATIONS_PATH.exists() else 0
@@ -320,9 +451,15 @@ def main():
 
     playing_bank = -1
     playing_station = -1
-    volume = DEFAULT_VOLUME
     play_enabled = GPIO.input(PLAY_PAUSE_PIN) == GPIO.HIGH
     last_switch_change = 0.0
+
+    # Restore volume from saved state, or use default
+    if saved_state and 0 <= saved_state.get("volume", -1) <= VOLUME_MAX:
+        volume = saved_state["volume"]
+        log.info("Restored volume: %d", volume)
+    else:
+        volume = DEFAULT_VOLUME
 
     # Set initial volume
     mpc("volume", str(volume))
@@ -343,21 +480,33 @@ def main():
     watchdog_last_check = 0.0
     watchdog_stop_since = 0.0
 
+    # ── State persistence tracking ──
+    last_state_save = 0.0
+    state_dirty = True  # Save initial state on first opportunity
+
+    # ── Config reload tracking ──
+    last_config_check = 0.0
+
+    # Tell systemd we're ready
+    _notify_ready()
+
     # ── Main loop ──
     log.info("Entering main loop")
-    while True:
+    while not _shutdown:
         try:
             now = time.monotonic()
 
-            # ── Reload stations.yaml if it changed ──
-            try:
-                mt = STATIONS_PATH.stat().st_mtime
-                if mt != stations_mtime:
-                    stations_data = load_stations()
-                    stations_mtime = mt
-                    log.info("Reloaded stations.yaml")
-            except FileNotFoundError:
-                pass
+            # ── Reload stations.yaml if it changed (throttled) ──
+            if now - last_config_check >= CONFIG_CHECK_INTERVAL:
+                last_config_check = now
+                try:
+                    mt = STATIONS_PATH.stat().st_mtime
+                    if mt != stations_mtime:
+                        stations_data = load_stations()
+                        stations_mtime = mt
+                        log.info("Reloaded stations.yaml")
+                except FileNotFoundError:
+                    pass
 
             # ── Read BCD switches ──
             raw_bank = read_bcd(BANK_PINS)
@@ -385,6 +534,7 @@ def main():
                             playing_bank = cur_bank
                             playing_station = cur_station
                             watchdog_stop_since = 0.0
+                            state_dirty = True
                     else:
                         log.warning("No station at bank=%d station=%d", cur_bank, cur_station)
 
@@ -401,6 +551,7 @@ def main():
                 volume = clamp(volume + delta * VOLUME_STEP, VOLUME_MIN, VOLUME_MAX)
                 mpc("volume", str(volume))
                 log.debug("Volume: %d", volume)
+                state_dirty = True
 
             # ── Encoder button (play/pause toggle) ──
             try:
@@ -447,15 +598,24 @@ def main():
                     else:
                         watchdog_stop_since = 0.0
 
+            # ── Save state to disk (throttled, only when changed) ──
+            if state_dirty and now - last_state_save >= STATE_SAVE_INTERVAL:
+                save_state(volume, playing_bank, playing_station)
+                last_state_save = now
+                state_dirty = False
+
+            # ── Systemd watchdog keepalive ──
+            _notify_watchdog()
+
             time.sleep(POLL_INTERVAL)
 
-        except KeyboardInterrupt:
-            log.info("Shutting down")
-            break
         except Exception as e:
             log.error("Error: %s", e, exc_info=True)
             time.sleep(1.0)
 
+    # ── Graceful shutdown ──
+    log.info("Shutting down gracefully")
+    save_state(volume, playing_bank, playing_station)
     GPIO.cleanup()
 
 
