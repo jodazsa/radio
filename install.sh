@@ -40,7 +40,7 @@ fi
 
 # 4. Python libraries (Seesaw for I2C encoder)
 echo "→ Installing Python libraries..."
-pip3 install --break-system-packages adafruit-circuitpython-seesaw
+pip3 install --break-system-packages Adafruit-Blinka adafruit-circuitpython-seesaw
 
 # 5. Create radio user and directories
 echo "→ Setting up radio user..."
