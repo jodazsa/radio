@@ -34,6 +34,7 @@ STATIONS_PATH = Path("/home/radio/stations.yaml")
 AUDIO_ROOT = Path("/home/radio/audio")
 AUDIO_EXTS = (".mp3", ".flac", ".ogg", ".m4a", ".wav", ".aac")
 STATE_PATH = Path("/home/radio/state.json")
+STATE_BACKUP_PATH = Path("/home/radio/state.backup.json")
 
 # ── Hardware pin mappings ──────────────────────────────────
 # Station BCD switch
@@ -129,8 +130,31 @@ def _notify_ready():
 
 # ── State persistence ────────────────────────────────────────
 
+def _atomic_write_json(path: Path, payload: dict):
+    """Atomically write JSON payload and fsync file + parent directory."""
+    dirpath = path.parent
+    fd, tmp_path = tempfile.mkstemp(dir=str(dirpath), suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w") as f:
+            json.dump(payload, f)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp_path, str(path))
+        dfd = os.open(str(dirpath), os.O_RDONLY)
+        try:
+            os.fsync(dfd)
+        finally:
+            os.close(dfd)
+    except Exception:
+        try:
+            os.unlink(tmp_path)
+        except OSError:
+            pass
+        raise
+
+
 def save_state(volume, bank, station):
-    """Atomically save state to disk. Survives power loss during write."""
+    """Atomically save state to disk and rotate a backup copy."""
     state = {
         "volume": volume,
         "bank": bank,
@@ -138,50 +162,56 @@ def save_state(volume, bank, station):
         "timestamp": int(time.time()),
     }
     try:
-        dirpath = STATE_PATH.parent
-        fd, tmp_path = tempfile.mkstemp(dir=str(dirpath), suffix=".tmp")
-        try:
-            with os.fdopen(fd, "w") as f:
-                json.dump(state, f)
-                f.flush()
-                os.fsync(f.fileno())
-            os.replace(tmp_path, str(STATE_PATH))
-            # fsync the directory to ensure the rename is durable
-            dfd = os.open(str(dirpath), os.O_RDONLY)
-            try:
-                os.fsync(dfd)
-            finally:
-                os.close(dfd)
-        except Exception:
-            # Clean up temp file on failure
-            try:
-                os.unlink(tmp_path)
-            except OSError:
-                pass
-            raise
+        _atomic_write_json(STATE_PATH, state)
+        _atomic_write_json(STATE_BACKUP_PATH, state)
     except Exception as e:
         log.warning("Failed to save state: %s", e)
 
 
+def _validate_state(data):
+    """Validate loaded state and normalize values."""
+    if not isinstance(data, dict):
+        return None
+
+    volume = data.get("volume")
+    bank = data.get("bank")
+    station = data.get("station")
+    if not all(isinstance(v, int) for v in (volume, bank, station)):
+        return None
+
+    if not (VOLUME_MIN <= volume <= VOLUME_MAX):
+        return None
+    if not (-1 <= bank <= 9 and -1 <= station <= 9):
+        return None
+
+    return {
+        "volume": volume,
+        "bank": bank,
+        "station": station,
+        "timestamp": data.get("timestamp"),
+    }
+
+
 def load_state():
-    """Load saved state from disk. Returns dict or None."""
-    try:
-        if STATE_PATH.exists():
-            with open(STATE_PATH) as f:
-                data = json.load(f)
-            if isinstance(data, dict) and "volume" in data:
-                log.info("Restored state: volume=%d bank=%d station=%d",
-                         data.get("volume", DEFAULT_VOLUME),
-                         data.get("bank", -1),
-                         data.get("station", -1))
-                return data
-    except (json.JSONDecodeError, OSError) as e:
-        log.warning("Could not load state file: %s", e)
-        # Corrupted state file — remove it so we start fresh
+    """Load saved state from disk. Falls back to backup file if needed."""
+    for path in (STATE_PATH, STATE_BACKUP_PATH):
         try:
-            STATE_PATH.unlink(missing_ok=True)
-        except OSError:
-            pass
+            if not path.exists():
+                continue
+            with open(path) as f:
+                data = json.load(f)
+            validated = _validate_state(data)
+            if validated:
+                log.info("Restored state from %s: volume=%d bank=%d station=%d",
+                         path.name,
+                         validated["volume"],
+                         validated["bank"],
+                         validated["station"])
+                return validated
+            log.warning("Invalid state data in %s", path)
+        except (json.JSONDecodeError, OSError) as e:
+            log.warning("Could not load %s: %s", path, e)
+
     return None
 
 
