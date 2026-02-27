@@ -298,6 +298,23 @@ def play_file(path_str):
     _seek_random()
 
 
+def play_file_once(path_str):
+    """Play a single local file from the beginning once, then stop."""
+    resolved = _resolve_path(path_str)
+    if not resolved.exists():
+        log.error("File not found: %s", resolved)
+        return
+
+    rel = _mpd_relpath(resolved)
+    log.info("Playing file once: %s", rel)
+    mpc("clear")
+    mpc("repeat", "off")
+    mpc("single", "off")
+    mpc("random", "off")
+    mpc("add", rel)
+    mpc("play")
+
+
 def play_dir(path_str):
     """Play a directory from a random track and random position, then continue in order."""
     resolved = _resolve_path(path_str)
@@ -404,6 +421,14 @@ def play_station(data, bank_id, station_id):
             log.error("Dir station '%s' has no path", name)
             return False
         play_dir(path)
+        return True
+
+    if stype in ("file_once", "single_file"):
+        path = (station.get("path") or station.get("file") or "").strip()
+        if not path:
+            log.error("File-once station '%s' has no path", name)
+            return False
+        play_file_once(path)
         return True
 
     # Handle legacy type names from the old stations.yaml

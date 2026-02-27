@@ -10,7 +10,7 @@
 | Auto-update stations from GitHub | **Removed** | Edit `stations.yaml` directly on the Pi |
 | WiFi AP fallback + provisioning | **Removed** | Set up WiFi with `raspi-config` or Pi Imager |
 | Fuzzy media matching (roman numerals, legacy prefixes) | **Removed** | Just use correct paths |
-| 6 station types with aliases | **3 types: `stream`, `file`, `dir`** | Covers all real usage |
+| 6 station types with aliases | **4 types: `stream`, `file`, `file_once`, `dir`** | Covers all real usage |
 | BCD decode maps, stability windows, glitch filters | **Simple debounce only** | Kept minimal; add back if switches misbehave |
 | Playback watchdog with exponential backoff | **Simple watchdog** | Restarts dead streams, no complex backoff |
 | 5 systemd services + 1 timer | **2 systemd services** | `radio.py` + small `radio_web.py` web control |
@@ -155,9 +155,17 @@ sudo systemctl restart radio
 ```
 Paths are relative to `/home/radio/audio/`.
 
-**dir** — Play all files in a directory:
+**file_once** — Single local audio file from the beginning, no repeat:
 ```yaml
 2:
+  name: "Station ID"
+  type: file_once
+  path: "ids/jingle.mp3"
+```
+
+**dir** — Play all files in a directory:
+```yaml
+3:
   name: "Bob Dylan"
   type: dir
   path: "artists/bob-dylan"

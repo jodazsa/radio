@@ -174,6 +174,18 @@ def play_station(bank_id, station_id):
         code, _, err = mpc("play")
         return code == 0, name if code == 0 else err
 
+    if stype in ("file_once", "single_file"):
+        path = (station.get("path") or station.get("file") or "").strip()
+        if not path:
+            return False, "Station has no path"
+        mpc("clear")
+        mpc("repeat", "off")
+        mpc("single", "off")
+        mpc("random", "off")
+        mpc("add", path)
+        code, _, err = mpc("play")
+        return code == 0, name if code == 0 else err
+
     # Legacy types from older stations.yaml configs
     if stype in ("mp3_loop_random_start", "file_loop_random_start", "file_loop"):
         path = (station.get("path") or station.get("file") or "").strip()
