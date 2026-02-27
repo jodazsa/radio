@@ -21,7 +21,7 @@ from pathlib import Path
 import yaml
 
 STATIONS_PATH = Path("/home/radio/stations.yaml")
-RADIO_HTML_PATH = Path(__file__).with_name("radio.html")
+RADIO_HTML_PATH = Path(os.environ.get("RADIO_WEB_UI_PATH", Path(__file__).with_name("radio.html")))
 HOST = os.environ.get("RADIO_WEB_HOST", "0.0.0.0")
 PORT = int(os.environ.get("RADIO_WEB_PORT", "8080"))
 
@@ -403,7 +403,7 @@ class RadioHandler(BaseHTTPRequestHandler):
 
     def _read_radio_html(self):
         if not RADIO_HTML_PATH.exists():
-            raise FileNotFoundError(f"UI file not found: {RADIO_HTML_PATH}")
+            raise FileNotFoundError(f"UI file not found: {RADIO_HTML_PATH} (set RADIO_WEB_UI_PATH or deploy radio.html)")
         return RADIO_HTML_PATH.read_text(encoding="utf-8")
 
     def _read_body(self):
