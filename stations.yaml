@@ -426,14 +426,6 @@ banks:
         name: "Feeling Tone Meditation"
         type: file_once
         path: "tracks/010-3- 3.2 The 20-Minute Feeling Tone Meditation.mp3"
-      10:
-        name: "Feeling Tone Moment by Moment"
-        type: file_once
-        path: "tracks/011-5- 5.2 The 20-Minute Feeling Tone Moment by Moment Meditation.mp3"
-      11:
-        name: "Exploring Difficulty Meditation"
-        type: file_once
-        path: "tracks/012-6- 6.4 The 20-Minute Exploring Difficulty Meditation.mp3"
   9:
     name: "Offline Recordings"
     stations:
