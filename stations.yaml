@@ -393,7 +393,7 @@ banks:
       1:
         name: "Sitting Meditation - 20 Minutes"
         type: file_once
-        path: "tracks/2-02 Sitting Meditation - 20 Minutes.mp3"
+        path: "tracks/2-02 Sitting Medidation - 20 Minutes.mp3"
       2:
         name: "Mountain"
         type: file_once
@@ -417,7 +417,7 @@ banks:
       7:
         name: "Finding your Ground Meditation"
         type: file_once
-        path: "tracks/008-1 - 1.2 The 20-Minute Finding your Ground Meditation.mp3"
+        path: "tracks/008-1- 1.2 The 20-Minute Finding your Ground Meditation.mp3"
       8:
         name: "Taking a Pause Meditation"
         type: file_once
