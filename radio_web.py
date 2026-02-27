@@ -14,6 +14,7 @@ import logging
 import os
 import subprocess
 import sys
+import time
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -21,6 +22,7 @@ from pathlib import Path
 import yaml
 
 STATIONS_PATH = Path("/home/radio/stations.yaml")
+STATE_PATH = Path("/home/radio/state.json")
 RADIO_HTML_PATH = Path(os.environ.get("RADIO_WEB_UI_PATH", Path(__file__).with_name("radio.html")))
 HOST = os.environ.get("RADIO_WEB_HOST", "0.0.0.0")
 PORT = int(os.environ.get("RADIO_WEB_PORT", "8080"))
@@ -31,6 +33,7 @@ LAST_SELECTION = {
     "bank_name": "",
     "station_name": "",
 }
+_last_selection_time = 0.0
 
 logging.basicConfig(
     level=logging.INFO,
@@ -119,6 +122,7 @@ def stations_json():
 
 def play_station(bank_id, station_id):
     """Play a station by bank/station ID. Returns (ok, message)."""
+    global _last_selection_time
     data = load_stations()
     banks = data.get("banks", {})
     bank = banks.get(bank_id)
@@ -135,6 +139,7 @@ def play_station(bank_id, station_id):
     LAST_SELECTION["station"] = station_id
     LAST_SELECTION["bank_name"] = bank.get("name", f"{bank_id}")
     LAST_SELECTION["station_name"] = name
+    _last_selection_time = time.time()
 
     if stype == "stream":
         url = (station.get("url") or "").strip()
@@ -512,7 +517,37 @@ class RadioHandler(BaseHTTPRequestHandler):
             })
 
         elif self.path == "/state":
-            self._json({"success": True, **LAST_SELECTION})
+            result = {
+                "success": True,
+                "bank": LAST_SELECTION["bank"],
+                "station": LAST_SELECTION["station"],
+                "bank_name": LAST_SELECTION["bank_name"],
+                "station_name": LAST_SELECTION["station_name"],
+            }
+            # Prefer hardware state (written by radio.py) when it's newer
+            try:
+                hw = json.loads(STATE_PATH.read_text(encoding="utf-8"))
+                if hw.get("timestamp", 0) >= _last_selection_time:
+                    b = hw.get("bank", -1)
+                    s = hw.get("station", -1)
+                    if b >= 0 and s >= 0:
+                        result["bank"] = b
+                        result["station"] = s
+                        result["bank_name"] = ""
+                        result["station_name"] = ""
+                        try:
+                            cfg = load_stations()
+                            bank = cfg.get("banks", {}).get(b)
+                            if isinstance(bank, dict):
+                                result["bank_name"] = bank.get("name", "")
+                                st = bank.get("stations", {}).get(s)
+                                if isinstance(st, dict):
+                                    result["station_name"] = st.get("name", "")
+                        except Exception:
+                            pass
+            except Exception:
+                pass
+            self._json(result)
 
         elif self.path == "/stations":
             try:
