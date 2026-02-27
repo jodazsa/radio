@@ -563,6 +563,17 @@ class RadioHandler(BaseHTTPRequestHandler):
                 code, _, _ = mpc("play")
             elif command == "mpc pause":
                 code, _, _ = mpc("pause")
+            elif command.startswith("mpc volume "):
+                parts = command.split()
+                if len(parts) != 3:
+                    self._json({"success": False, "error_type": "command_failed"}, HTTPStatus.BAD_REQUEST)
+                    return
+                try:
+                    volume = max(0, min(100, int(parts[2])))
+                except ValueError:
+                    self._json({"success": False, "error_type": "command_failed"}, HTTPStatus.BAD_REQUEST)
+                    return
+                code, _, _ = mpc("volume", str(volume))
             elif command == "sudo shutdown -h now":
                 self._json({"success": False, "error_type": "forbidden_command"}, HTTPStatus.FORBIDDEN)
                 return
