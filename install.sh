@@ -56,14 +56,10 @@ sudo cp "$SCRIPT_DIR/radio.py" /usr/local/bin/radio.py
 sudo cp "$SCRIPT_DIR/radio_web.py" /usr/local/bin/radio_web.py
 sudo chmod +x /usr/local/bin/radio.py /usr/local/bin/radio_web.py
 
-# Copy stations.yaml only if not already present (don't overwrite edits)
-if [ ! -f /home/radio/stations.yaml ]; then
-    sudo cp "$SCRIPT_DIR/stations.yaml" /home/radio/stations.yaml
-    sudo chown radio:radio /home/radio/stations.yaml
-    echo "  Installed default stations.yaml"
-else
-    echo "  stations.yaml already exists, keeping your version"
-fi
+# Always sync stations.yaml from the repo so Pi stations match GitHub main
+sudo cp "$SCRIPT_DIR/stations.yaml" /home/radio/stations.yaml
+sudo chown radio:radio /home/radio/stations.yaml
+echo "  Synced stations.yaml from repository"
 
 # 7. Configure MPD
 echo "→ Configuring MPD..."
