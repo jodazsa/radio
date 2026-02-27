@@ -299,7 +299,7 @@ def play_file(path_str):
 
 
 def play_dir(path_str):
-    """Play all audio files in a directory, starting at a random track."""
+    """Play a directory from a random track and random position, then continue in order."""
     resolved = _resolve_path(path_str)
     if not resolved.is_dir():
         log.error("Directory not found: %s", resolved)
@@ -323,6 +323,10 @@ def play_dir(path_str):
 
     start = random.randint(1, len(files))
     mpc("play", str(start))
+    # Random seek into the first selected track only.
+    # MPD will continue to subsequent tracks from their beginnings.
+    time.sleep(0.3)
+    _seek_random()
 
 
 def _resolve_path(raw: str) -> Path:
