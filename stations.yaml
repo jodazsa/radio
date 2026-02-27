@@ -384,48 +384,56 @@ banks:
         type: stream
         url: "https://broadcast.shoutcheap.com/proxy/morong/stream" 
   8:
-    name: "Grand Theft Auto"
+    name: "Meditation Tracks"
     stations:
       0:
-        name: "FlyLo FM"
-        type: file
-        path: "tracks/FlyLo FM - GTA V.mp3"
+        name: "Guided 20 min"
+        type: file_once
+        path: "tracks/001- Guided 20 min.mp3"
       1:
-        name: "Fusion FM"
-        type: file
-        path: "tracks/Fusion FM - GTA IV.mp3"
+        name: "Sitting Meditation - 20 Minutes"
+        type: file_once
+        path: "tracks/2-02 Sitting Meditation - 20 Minutes.mp3"
       2:
-        name: "Los Santos Rock Radio"
-        type: file
-        path: "tracks/Los Santos Rock Radio - GTA V.mp3"
+        name: "Mountain"
+        type: file_once
+        path: "tracks/2-07 Mountain.mp3"
       3:
-        name: "MSX FM"
-        type: file
-        path: "tracks/MSX FM - GTA III.mp3"
+        name: "Lake"
+        type: file_once
+        path: "tracks/2-08 Lake.mp3"
       4:
-        name: "Jazz Nation Radio"
-        type: file
-        path: "tracks/Jazz Nation Radio - GTA IV.mp3"
+        name: "Breathscape Meditation"
+        type: file_once
+        path: "tracks/005-3-01 Breathscape Meditation.mp3"
       5:
-        name: "K-DST"
-        type: file
-        path: "tracks/K-DST - GTA San Andreas.mp3"
+        name: "Bodyscape Meditation"
+        type: file_once
+        path: "tracks/006-3-02 Bodyscape Meditation.mp3"
       6:
-        name: "K Rose"
-        type: file
-        path: "tracks/K Rose - GTA San Andreas.mp3"
+        name: "Breathscape And Bodyscape"
+        type: file_once
+        path: "tracks/007-3-03 Breathscape And Bodyscape.mp3"
       7:
-        name: "Blue Ark Radio"
-        type: file
-        path: "tracks/The Blue Ark - GTA V.mp3"
+        name: "Finding your Ground Meditation"
+        type: file_once
+        path: "tracks/008-1 - 1.2 The 20-Minute Finding your Ground Meditation.mp3"
       8:
-        name: "K-JAH Radio"
-        type: file
-        path: "tracks/K-JAH - GTA III.mp3"
+        name: "Taking a Pause Meditation"
+        type: file_once
+        path: "tracks/009-2- 2.2 The 20-Minute Taking a Pause Meditation.mp3"
       9:
-        name: "Non-Stop Pop"
-        type: file
-        path: "tracks/Non Stop Pop FM - GTA V.mp3"
+        name: "Feeling Tone Meditation"
+        type: file_once
+        path: "tracks/010-3- 3.2 The 20-Minute Feeling Tone Meditation.mp3"
+      10:
+        name: "Feeling Tone Moment by Moment"
+        type: file_once
+        path: "tracks/011-5- 5.2 The 20-Minute Feeling Tone Moment by Moment Meditation.mp3"
+      11:
+        name: "Exploring Difficulty Meditation"
+        type: file_once
+        path: "tracks/012-6- 6.4 The 20-Minute Exploring Difficulty Meditation.mp3"
   9:
     name: "Offline Recordings"
     stations:
@@ -469,4 +477,3 @@ banks:
         name: "Alice Cooper"
         type: dir
         path: "shows/AliceCooper"    
-
