@@ -192,6 +192,25 @@ git push origin main
 
 ### On the Raspberry Pi (pull + deploy)
 
+One-command option (from anywhere):
+
+```bash
+~/radio/update_main_and_reboot.sh
+```
+
+This runs:
+
+```bash
+cd ~/radio
+git fetch origin
+git checkout main
+git pull --ff-only origin main
+./install.sh
+sudo reboot
+```
+
+Manual option:
+
 ```bash
 cd ~/radio
 
