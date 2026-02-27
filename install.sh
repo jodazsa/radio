@@ -54,7 +54,9 @@ sudo chmod 755 /home/radio /home/radio/audio /home/radio/logs
 echo "→ Installing radio files..."
 sudo cp "$SCRIPT_DIR/radio.py" /usr/local/bin/radio.py
 sudo cp "$SCRIPT_DIR/radio_web.py" /usr/local/bin/radio_web.py
+sudo cp "$SCRIPT_DIR/radio.html" /usr/local/bin/radio.html
 sudo chmod +x /usr/local/bin/radio.py /usr/local/bin/radio_web.py
+sudo chmod 644 /usr/local/bin/radio.html
 
 # Always sync stations.yaml from the repo so Pi stations match GitHub main
 sudo cp "$SCRIPT_DIR/stations.yaml" /home/radio/stations.yaml
