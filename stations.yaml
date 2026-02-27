@@ -382,84 +382,84 @@ banks:
       0:
         name: "FlyLo FM"
         type: file
-        file: "tracks/FlyLo FM - GTA V.mp3"
+        path: "tracks/FlyLo FM - GTA V.mp3"
       1:
         name: "Fusion FM"
         type: file
-        file: "tracks/Fusion FM - GTA IV.mp3"
+        path: "tracks/Fusion FM - GTA IV.mp3"
       2:
         name: "Los Santos Rock Radio"
         type: file
-        file: "tracks/Los Santos Rock Radio - GTA V.mp3"
+        path: "tracks/Los Santos Rock Radio - GTA V.mp3"
       3:
         name: "MSX FM"
         type: file
-        file: "tracks/MSX FM - GTA III.mp3"
+        path: "tracks/MSX FM - GTA III.mp3"
       4:
         name: "Jazz Nation Radio"
         type: file
-        file: "tracks/Jazz Nation Radio - GTA IV.mp3"
+        path: "tracks/Jazz Nation Radio - GTA IV.mp3"
       5:
         name: "K-DST"
         type: file
-        file: "tracks/K-DST - GTA San Andreas.mp3"
+        path: "tracks/K-DST - GTA San Andreas.mp3"
       6:
         name: "K Rose"
         type: file
-        file: "tracks/K Rose - GTA San Andreas.mp3"
+        path: "tracks/K Rose - GTA San Andreas.mp3"
       7:
         name: "Blue Ark Radio"
         type: file
-        file: "tracks/The Blue Ark - GTA V.mp3"
+        path: "tracks/The Blue Ark - GTA V.mp3"
       8:
         name: "K-JAH Radio"
         type: file
-        file: "tracks/K-JAH - GTA III.mp3"
+        path: "tracks/K-JAH - GTA III.mp3"
       9:
         name: "Non-Stop Pop"
         type: file
-        file: "tracks/Non Stop Pop FM - GTA V.mp3"
+        path: "tracks/Non Stop Pop FM - GTA V.mp3"
   9:
     name: "Offline Recordings"
     stations:
       0:
         name: "Theme Time Radio with Bob Dylan"
         type: dir
-        dir: "shows/BobDylan"
+        path: "shows/BobDylan"
       1:
         name: "Iggy Pop"
         type: dir
-        dir: "shows/IggyPop"
+        path: "shows/IggyPop"
       2:
         name: "Jarvis Cocker"
         type: dir
-        dir: "shows/JarvisCocker"    
+        path: "shows/JarvisCocker"    
       3:
         name: "Joe Strummer"
         type: dir
-        dir: "shows/JoeStrummer"    
+        path: "shows/JoeStrummer"    
       4:
         name: "John Peel"
         type: dir
-        dir: "shows/JohnPeel"    
+        path: "shows/JohnPeel"    
       5:
         name: "Marian McPartland"
         type: dir
-        dir: "shows/MarianMcPartland"    
+        path: "shows/MarianMcPartland"    
       6:
         name: "Paul McCartney"
         type: dir
-        dir: "shows/PaulMcCartney"    
+        path: "shows/PaulMcCartney"    
       7:
         name: "Henry Rollins"
         type: dir
-        dir: "shows/HenryRollins"    
+        path: "shows/HenryRollins"    
       8:
         name: "Muji BGM 1980-2000"
         type: file
-        file: "tracks/Muji BGM 1980-2000.mp3"    
+        path: "tracks/Muji BGM 1980-2000.mp3"    
       9:
         name: "Alice Cooper"
         type: dir
-        dir: "shows/AliceCooper"    
+        path: "shows/AliceCooper"    
 
