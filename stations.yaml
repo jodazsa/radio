@@ -8,17 +8,22 @@
 # Banks 0-9, Stations 0-9
 #
 # Example:
-# 2:
-#   name: "My Music"
-#   stations:
-#     0:
-#       name: "Bob Dylan"
-#       type: dir
-#       path: "artists/bob-dylan"
-#     1:
-#       name: "Rain Sounds"
-#       type: file
-#       path: "ambient/rain.mp3"
+#banks:
+#  2:
+#    name: "My Music"
+#    stations:
+#      0:
+#        name: "WWOZ New Orleans"
+#        type: stream
+#        url: "http://wwoz-sc.streamguys1.com/wwoz-hi.mp3"
+#      0:
+#        name: "Bob Dylan"
+#        type: dir
+#        path: "artists/bob-dylan"
+#      1:
+#        name: "Rain Sounds"
+#        type: file
+#        path: "ambient/rain.mp3"
 # 
 # Available types:  
 #  stream:  just play the stream
