@@ -8,5 +8,5 @@ cd "$REPO_DIR"
 git fetch origin
 git checkout main
 git pull --ff-only origin main
-./install.sh
+bash ./install.sh
 sudo reboot
