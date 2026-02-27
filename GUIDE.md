@@ -163,6 +163,66 @@ Paths are relative to `/home/radio/audio/`.
   path: "artists/bob-dylan"
 ```
 
+## Step 5b: Push changes to GitHub and pull them on the Pi
+
+Use this flow when you edit files on your computer (for example `stations.yaml` or `radio.py`) and want the Pi to run the latest version.
+
+### On your computer (local repo)
+
+```bash
+# Make sure you're in your local clone
+cd ~/path/to/radio
+
+# Create a branch (optional but recommended)
+git checkout -b update-stations
+
+# Stage + commit
+git add stations.yaml radio.py GUIDE.md
+git commit -m "Update stations and playback behavior"
+
+# Push to GitHub
+git push -u origin update-stations
+```
+
+If you commit directly to `main`, push with:
+
+```bash
+git push origin main
+```
+
+### On the Raspberry Pi (pull + deploy)
+
+```bash
+cd ~/radio
+
+# Fetch latest refs
+git fetch origin
+
+# If using main branch
+git checkout main
+git pull --ff-only origin main
+
+# If using a feature branch
+git checkout update-stations
+git pull --ff-only origin update-stations
+```
+
+Reinstall updated service/config files into `/home/radio` and restart:
+
+```bash
+./install.sh
+sudo systemctl restart radio radio-web
+mpc update
+```
+
+### Quick verification after pull
+
+```bash
+sudo systemctl status radio radio-web --no-pager
+sudo journalctl -u radio -n 50 --no-pager
+mpc status
+```
+
 ## Step 6: Add local music (optional)
 
 For a Windows-to-Pi path mapping guide that matches `stations.yaml`, see `TRANSFER_GUIDE.md`.
@@ -225,6 +285,83 @@ i2cdetect -y 1   # Should show 0x36
 ```bash
 sudo journalctl -u radio -n 50 --no-pager
 ```
+
+### Scenario: Bank knob at 8 or 9 does not play recorded audio
+
+If internet stations (banks 0-7) work but banks 8-9 are silent, this is usually a
+`stations.yaml` schema mismatch.
+
+#### Why this happens
+
+`radio.py` expects local `file` and `dir` stations to use a `path:` key.
+
+However, in the provided `stations.yaml`, many Bank 8 and Bank 9 entries use legacy
+keys (`file:` and `dir:`) while still declaring `type: file` or `type: dir`.
+
+Result: the service logs errors like "has no path" and those stations never queue in MPD.
+
+#### Confirm the issue quickly
+
+```bash
+# 1) Watch logs while turning bank/station knobs to 8 or 9
+sudo journalctl -u radio -f
+
+# 2) Look for these messages
+#    File station '...' has no path
+#    Dir station '...' has no path
+
+# 3) Optional: inspect current station definitions
+sudo sed -n '360,520p' /home/radio/stations.yaml
+```
+
+#### Fix option A (recommended): normalize Bank 8/9 entries to `path:`
+
+Edit the local station file:
+
+```bash
+sudo nano /home/radio/stations.yaml
+```
+
+Change entries like:
+
+```yaml
+type: file
+file: "tracks/FlyLo FM - GTA V.mp3"
+```
+
+to:
+
+```yaml
+type: file
+path: "tracks/FlyLo FM - GTA V.mp3"
+```
+
+And change entries like:
+
+```yaml
+type: dir
+dir: "shows/BobDylan"
+```
+
+to:
+
+```yaml
+type: dir
+path: "shows/BobDylan"
+```
+
+Then apply changes:
+
+```bash
+sudo systemctl restart radio
+mpc update
+```
+
+#### Fix option B: code compatibility patch
+
+If you want to keep legacy `file:` / `dir:` keys in YAML, patch `radio.py` so
+`type: file` also accepts `file`, and `type: dir` also accepts `dir`/`directory`.
+This mirrors the existing legacy handling already used for older type names.
 
 ---
 
