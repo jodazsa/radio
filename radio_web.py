@@ -21,8 +21,16 @@ from pathlib import Path
 import yaml
 
 STATIONS_PATH = Path("/home/radio/stations.yaml")
+RADIO_HTML_PATH = Path(os.environ.get("RADIO_WEB_UI_PATH", Path(__file__).with_name("radio.html")))
 HOST = os.environ.get("RADIO_WEB_HOST", "0.0.0.0")
 PORT = int(os.environ.get("RADIO_WEB_PORT", "8080"))
+
+LAST_SELECTION = {
+    "bank": 0,
+    "station": 0,
+    "bank_name": "",
+    "station_name": "",
+}
 
 logging.basicConfig(
     level=logging.INFO,
@@ -52,7 +60,7 @@ def mpc(*args):
 def load_stations():
     """Load stations.yaml."""
     if not STATIONS_PATH.exists():
-        return {}
+        raise FileNotFoundError(f"Stations file not found: {STATIONS_PATH}")
     with open(STATIONS_PATH, "r", encoding="utf-8") as f:
         return yaml.safe_load(f) or {}
 
@@ -122,6 +130,11 @@ def play_station(bank_id, station_id):
 
     name = station.get("name", "Unknown")
     stype = (station.get("type") or "").strip().lower()
+
+    LAST_SELECTION["bank"] = bank_id
+    LAST_SELECTION["station"] = station_id
+    LAST_SELECTION["bank_name"] = bank.get("name", f"{bank_id}")
+    LAST_SELECTION["station_name"] = name
 
     if stype == "stream":
         url = (station.get("url") or "").strip()
@@ -388,6 +401,11 @@ class RadioHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def _read_radio_html(self):
+        if not RADIO_HTML_PATH.exists():
+            raise FileNotFoundError(f"UI file not found: {RADIO_HTML_PATH} (set RADIO_WEB_UI_PATH or deploy radio.html)")
+        return RADIO_HTML_PATH.read_text(encoding="utf-8")
+
     def _read_body(self):
         length = int(self.headers.get("Content-Length", 0))
         if length == 0:
@@ -400,12 +418,24 @@ class RadioHandler(BaseHTTPRequestHandler):
     # ── GET routes ──
 
     def do_GET(self):
-        if self.path == "/" or self.path == "/index.html":
-            self._html(INDEX_HTML)
+        if self.path in {"/", "/index.html", "/radio.html"}:
+            try:
+                self._html(self._read_radio_html())
+            except FileNotFoundError as exc:
+                self._json({"error": str(exc)}, HTTPStatus.INTERNAL_SERVER_ERROR)
         elif self.path == "/api/status":
             self._json(get_status())
         elif self.path == "/api/stations":
-            self._json(stations_json())
+            try:
+                self._json(stations_json())
+            except FileNotFoundError as exc:
+                self._json({"error": str(exc)}, HTTPStatus.INTERNAL_SERVER_ERROR)
+        elif self.path == "/stations/source":
+            self._json({"success": True, "github_url": "", "auto_update_enabled": False})
+        elif self.path == "/admin/version":
+            self._json({"success": True, "version": "local"})
+        elif self.path in {"/admin/log", "/admin/service-logs"}:
+            self._json({"success": False, "error": "Not supported in this web server"}, HTTPStatus.NOT_IMPLEMENTED)
         else:
             self.send_error(HTTPStatus.NOT_FOUND)
 
@@ -428,7 +458,11 @@ class RadioHandler(BaseHTTPRequestHandler):
             except (ValueError, TypeError):
                 self._json({"error": "bank and station must be numbers"}, HTTPStatus.BAD_REQUEST)
                 return
-            ok, msg = play_station(bank_id, station_id)
+            try:
+                ok, msg = play_station(bank_id, station_id)
+            except FileNotFoundError as exc:
+                self._json({"error": str(exc)}, HTTPStatus.INTERNAL_SERVER_ERROR)
+                return
             if ok:
                 self._json({"ok": True, "name": msg})
             else:
@@ -466,6 +500,87 @@ class RadioHandler(BaseHTTPRequestHandler):
                 return
             mpc("volume", str(vol))
             self._json({"ok": True, "volume": vol})
+
+        elif self.path == "/status":
+            status = get_status()
+            self._json({
+                "success": True,
+                "volume": status.get("volume", 50),
+                "current_track": status.get("current", ""),
+                "is_playing": status.get("state") == "playing",
+                "is_paused": status.get("state") == "paused",
+            })
+
+        elif self.path == "/state":
+            self._json({"success": True, **LAST_SELECTION})
+
+        elif self.path == "/stations":
+            try:
+                banks = []
+                for bank in stations_json():
+                    banks.append({
+                        "bank": bank["id"],
+                        "name": bank["name"],
+                        "stations": [
+                            {"station": st["id"], "name": st["name"]}
+                            for st in bank.get("stations", [])
+                        ],
+                    })
+                self._json({"success": True, "banks": banks})
+            except FileNotFoundError as exc:
+                self._json({"success": False, "error": str(exc)}, HTTPStatus.INTERNAL_SERVER_ERROR)
+
+        elif self.path == "/command":
+            body = self._read_body()
+            if body is None:
+                self._json({"success": False, "error": "invalid JSON"}, HTTPStatus.BAD_REQUEST)
+                return
+            command = (body.get("command") or "").strip()
+
+            if command.startswith("radio-play"):
+                parts = command.split()
+                if len(parts) != 3:
+                    self._json({"success": False, "error_type": "command_failed"}, HTTPStatus.BAD_REQUEST)
+                    return
+                try:
+                    bank_id = int(parts[1])
+                    station_id = int(parts[2])
+                except ValueError:
+                    self._json({"success": False, "error_type": "command_failed"}, HTTPStatus.BAD_REQUEST)
+                    return
+                try:
+                    ok, msg = play_station(bank_id, station_id)
+                except FileNotFoundError as exc:
+                    self._json({"success": False, "error": str(exc), "error_type": "command_failed"}, HTTPStatus.INTERNAL_SERVER_ERROR)
+                    return
+                if ok:
+                    self._json({"success": True, "message": msg})
+                else:
+                    self._json({"success": False, "error": msg, "error_type": "command_failed"}, HTTPStatus.BAD_REQUEST)
+                return
+
+            if command == "mpc play":
+                code, _, _ = mpc("play")
+            elif command == "mpc pause":
+                code, _, _ = mpc("pause")
+            elif command == "sudo shutdown -h now":
+                self._json({"success": False, "error_type": "forbidden_command"}, HTTPStatus.FORBIDDEN)
+                return
+            else:
+                self._json({"success": False, "error_type": "forbidden_command"}, HTTPStatus.FORBIDDEN)
+                return
+
+            self._json({"success": code == 0})
+
+        elif self.path in {
+            "/stations/refresh",
+            "/stations/source",
+            "/stations/auto-update",
+            "/admin/update",
+            "/admin/restart",
+            "/admin/reboot",
+        }:
+            self._json({"success": False, "error": "Not supported in this web server"}, HTTPStatus.NOT_IMPLEMENTED)
 
         else:
             self.send_error(HTTPStatus.NOT_FOUND)
