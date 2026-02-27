@@ -51,6 +51,7 @@ SEESAW_BUTTON_PIN = 24
 POLL_INTERVAL = 0.1       # Main loop sleep (seconds)
 DEBOUNCE_TIME = 0.15      # Ignore switch changes faster than this
 VOLUME_STEP = 4           # Volume change per encoder click
+MAX_VOLUME_DELTA = 4      # Ignore encoder jumps larger than this (I2C glitch guard)
 VOLUME_MIN = 0
 VOLUME_MAX = 100
 DEFAULT_VOLUME = 60
@@ -461,6 +462,7 @@ def main():
         seesaw.pin_mode(SEESAW_BUTTON_PIN, seesaw.INPUT_PULLUP)
         vol_encoder = IncrementalEncoder(seesaw, 0)
         last_vol_pos = vol_encoder.position
+        resync_volume_encoder = False
         last_button = seesaw.digital_read(SEESAW_BUTTON_PIN)
         log.info("Volume encoder ready at 0x%02x", VOLUME_I2C_ADDR)
     except Exception as e:
@@ -573,15 +575,27 @@ def main():
                 vol_pos = vol_encoder.position
             except OSError:
                 vol_pos = last_vol_pos
+                resync_volume_encoder = True
                 time.sleep(0.1)
 
             if vol_pos != last_vol_pos:
-                delta = last_vol_pos - vol_pos
-                last_vol_pos = vol_pos
-                volume = clamp(volume + delta * VOLUME_STEP, VOLUME_MIN, VOLUME_MAX)
-                mpc("volume", str(volume))
-                log.debug("Volume: %d", volume)
-                state_dirty = True
+                if resync_volume_encoder:
+                    log.warning("Volume encoder recovered after I2C error; resyncing position")
+                    last_vol_pos = vol_pos
+                    resync_volume_encoder = False
+                else:
+                    delta = last_vol_pos - vol_pos
+                    last_vol_pos = vol_pos
+                    if abs(delta) > MAX_VOLUME_DELTA:
+                        log.warning(
+                            "Ignoring suspicious volume encoder jump: %d steps",
+                            delta,
+                        )
+                    else:
+                        volume = clamp(volume + delta * VOLUME_STEP, VOLUME_MIN, VOLUME_MAX)
+                        mpc("volume", str(volume))
+                        log.debug("Volume: %d", volume)
+                        state_dirty = True
 
             # ── Encoder button (play/pause toggle) ──
             try:
