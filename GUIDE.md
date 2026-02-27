@@ -165,6 +165,8 @@ Paths are relative to `/home/radio/audio/`.
 
 ## Step 6: Add local music (optional)
 
+For a Windows-to-Pi path mapping guide that matches `stations.yaml`, see `TRANSFER_GUIDE.md`.
+
 ```bash
 # From your computer, copy files to the Pi:
 scp -r "my-music/" radio@radio.local:/home/radio/audio/my-music/
