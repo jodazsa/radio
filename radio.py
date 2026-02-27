@@ -40,7 +40,7 @@ STATE_BACKUP_PATH = Path("/home/radio/state.backup.json")
 # Station BCD switch
 STATION_PINS = {"bit0": 9, "bit1": 10, "bit2": 22, "bit3": 17}
 # Bank BCD switch
-BANK_PINS = {"bit0": 5, "bit1": 6, "bit2": 13, "bit3": 11}
+BANK_PINS = {"bit0": 13, "bit1": 6, "bit2": 5, "bit3": 11}
 # Play/pause toggle switch
 PLAY_PAUSE_PIN = 24
 # Volume encoder I2C address and Seesaw button pin
