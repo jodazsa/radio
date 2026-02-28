@@ -402,10 +402,24 @@ class RadioHandler(BaseHTTPRequestHandler):
     def log_message(self, fmt, *args):
         log.info(fmt, *args)
 
+    def _cors_headers(self):
+        """Add CORS headers so the UI works when opened as a file:// URL."""
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+
+    def do_OPTIONS(self):
+        """Handle CORS preflight requests."""
+        self.send_response(HTTPStatus.NO_CONTENT)
+        self._cors_headers()
+        self.send_header("Content-Length", "0")
+        self.end_headers()
+
     def _json(self, data, status=HTTPStatus.OK):
         body = json.dumps(data).encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", "application/json")
+        self._cors_headers()
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)
@@ -414,6 +428,7 @@ class RadioHandler(BaseHTTPRequestHandler):
         body = content.encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", "text/html; charset=utf-8")
+        self._cors_headers()
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)
