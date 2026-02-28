@@ -897,13 +897,13 @@
         function togglePlayPause() {
             api('POST', '/api/toggle')
                 .then(() => setTimeout(fetchCurrentStatus, 300))
-                .catch(() => updateStatus('NO SERVER', 'error'));
+                .catch(() => updateStatus('SERVER OFFLINE', 'error'));
         }
 
         function stopPlayback() {
             api('POST', '/api/stop')
                 .then(() => setTimeout(fetchCurrentStatus, 300))
-                .catch(() => updateStatus('NO SERVER', 'error'));
+                .catch(() => updateStatus('SERVER OFFLINE', 'error'));
         }
 
         // ── Bank / Station selection ──────────────────────────────
@@ -959,7 +959,7 @@
                     }
                 })
                 .catch(() => {
-                    updateStatus('NO SERVER', 'error');
+                    updateStatus('SERVER OFFLINE', 'error');
                 });
         }
 
@@ -1092,7 +1092,7 @@
                     }
                 })
                 .catch(() => {
-                    updateConnectionIndicator(false, 'NO SERVER');
+                    updateConnectionIndicator(false, 'SERVER OFFLINE');
                 });
         }
 
