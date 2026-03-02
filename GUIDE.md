@@ -4,16 +4,16 @@
 
 | Original | Simplified | Why |
 |----------|-----------|-----|
-| 15+ files, ~5,500 lines | **4 files, ~400 lines** | Less to break, easier to understand |
+| 15+ files, ~5,500 lines | **3 files, ~400 lines** | Less to break, easier to understand |
 | Separate `rotary-controller`, `radio-play`, `radio_lib.py` | **Single `radio.py`** | One file does everything |
-| 1,076-line web backend + 1,824-line web UI | **Tiny built-in web UI** | Minimal browser control on your local network |
+| 1,076-line web backend + 1,824-line web UI | **Removed** | Hardware switches only |
 | Auto-update stations from GitHub | **Removed** | Edit `stations.yaml` directly on the Pi |
 | WiFi AP fallback + provisioning | **Removed** | Set up WiFi with `raspi-config` or Pi Imager |
 | Fuzzy media matching (roman numerals, legacy prefixes) | **Removed** | Just use correct paths |
 | 6 station types with aliases | **4 types: `stream`, `file`, `file_once`, `dir`** | Covers all real usage |
 | BCD decode maps, stability windows, glitch filters | **Simple debounce only** | Kept minimal; add back if switches misbehave |
 | Playback watchdog with exponential backoff | **Simple watchdog** | Restarts dead streams, no complex backoff |
-| 5 systemd services + 1 timer | **2 systemd services** | `radio.py` + small `radio_web.py` web control |
+| 5 systemd services + 1 timer | **1 systemd service** | Just `radio.py` |
 | Full config validation (50+ checks) | **Fail-fast on missing keys** | Python will tell you what's wrong |
 | `deploy-rotary.sh` + `install-rotary.sh` | **Single `install.sh`** | One script, run once |
 
@@ -27,9 +27,7 @@ radio-simple/
 ├── install.sh            ← Run once on a fresh Pi
 ├── radio.py              ← The entire radio controller
 ├── stations.yaml         ← Your stations (edit this)
-├── radio.service         ← Main radio controller service
-├── radio-web.service     ← Web UI service
-└── radio_web.py          ← Browser-based radio control
+└── radio.service         ← Systemd service
 ```
 
 ---
@@ -79,7 +77,7 @@ This will:
 4. Create the `radio` user and directories
 5. Configure MPD and the HiFiBerry DAC
 6. Copy `radio.py` and `stations.yaml` into place
-7. Install and start the systemd services
+7. Install and start the systemd service
 
 **Reboot when prompted:**
 ```bash
@@ -92,7 +90,7 @@ After reboot, SSH back in and check:
 
 ```bash
 # Is the service running?
-sudo systemctl status radio radio-web
+sudo systemctl status radio
 
 # Can you see the I2C volume encoder?
 i2cdetect -y 1    # Should show device at 0x36
@@ -101,28 +99,10 @@ i2cdetect -y 1    # Should show device at 0x36
 mpc status
 
 # Watch the logs live
-sudo journalctl -u radio -u radio-web -f
+sudo journalctl -u radio -f
 ```
 
 Turn the station and bank switches — you should hear audio and see log entries.
-
-## Browser control (same network)
-
-A web interface is included. After install/reboot:
-
-```bash
-# Find your Pi IP
-hostname -I
-
-# Open from phone/laptop browser on same network
-http://<pi-ip>:8080
-```
-
-From the page you can:
-- Browse stations grouped by bank and play any of them
-- Play/pause, stop, previous/next track
-- Adjust volume with a slider (0–100)
-- See real-time now-playing status
 
 ## Step 5: Edit your stations
 
@@ -238,14 +218,14 @@ Reinstall updated service/config files into `/home/radio` and restart:
 
 ```bash
 ./install.sh
-sudo systemctl restart radio radio-web
+sudo systemctl restart radio
 mpc update
 ```
 
 ### Quick verification after pull
 
 ```bash
-sudo systemctl status radio radio-web --no-pager
+sudo systemctl status radio --no-pager
 sudo journalctl -u radio -n 50 --no-pager
 mpc status
 ```
@@ -294,7 +274,7 @@ All switch pins use internal pull-ups (active LOW).
 ```bash
 aplay -l                           # Check audio devices
 mpc outputs                        # Check MPD outputs
-sudo systemctl restart mpd radio   # Restart everything
+sudo systemctl restart mpd radio  # Restart everything
 ```
 
 **Switches not responding:**
@@ -446,10 +426,3 @@ The state file at `/home/radio/state.json` uses atomic writes to prevent corrupt
 - Monitor SD health: `sudo dmesg | grep -i "mmc\|error"`
 - Keep a backup SD card with the same setup ready to swap in
 
----
-
-## Web UI details
-
-The built-in web UI (`radio_web.py`) is a single-page app served on port 8080. It talks to MPD via `mpc` commands, just like `radio.py`. Both coexist safely.
-
-If you prefer a different web client, MPD is running on `localhost:6600` and any MPD client will work (e.g. **ympd**, **Rompr**).
