@@ -431,19 +431,6 @@ def play_station(data, bank_id, station_id):
         play_file_once(path)
         return True
 
-    # Handle legacy type names from the old stations.yaml
-    if stype in ("mp3_loop_random_start", "file_loop_random_start", "file_loop"):
-        path = (station.get("path") or station.get("file", "")).strip()
-        if path:
-            play_file(path)
-            return True
-
-    if stype in ("mp3_dir_random_start_then_in_order", "dir_random_start_then_in_order", "directory"):
-        path = (station.get("path") or station.get("directory") or station.get("dir", "")).strip()
-        if path:
-            play_dir(path)
-            return True
-
     log.error("Unknown station type '%s' for '%s'", stype, name)
     return False
 
