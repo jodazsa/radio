@@ -4,7 +4,7 @@
 Single script that handles:
 - BCD rotary switches for bank/station selection
 - I2C volume encoder (Adafruit Seesaw)
-- Play/pause toggle switch
+- Stop/start toggle switch
 - MPD playback via mpc commands
 - Stream watchdog (auto-restarts dead streams)
 - State persistence across power loss
@@ -41,8 +41,8 @@ STATE_BACKUP_PATH = Path("/home/radio/state.backup.json")
 STATION_PINS = {"bit0": 9, "bit1": 10, "bit2": 22, "bit3": 17}
 # Bank BCD switch
 BANK_PINS = {"bit0": 13, "bit1": 6, "bit2": 5, "bit3": 11}
-# Play/pause toggle switch
-PLAY_PAUSE_PIN = 24
+# Stop/start toggle switch
+STOP_START_PIN = 24
 # Volume encoder I2C address and Seesaw button pin
 VOLUME_I2C_ADDR = 0x36
 SEESAW_BUTTON_PIN = 24
@@ -466,7 +466,7 @@ def main():
     all_pins = (
         list(STATION_PINS.values())
         + list(BANK_PINS.values())
-        + [PLAY_PAUSE_PIN]
+        + [STOP_START_PIN]
     )
     for pin in all_pins:
         GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -499,7 +499,7 @@ def main():
 
     playing_bank = -1
     playing_station = -1
-    play_enabled = GPIO.input(PLAY_PAUSE_PIN) == GPIO.HIGH
+    play_enabled = GPIO.input(STOP_START_PIN) == GPIO.HIGH
     last_switch_change = 0.0
 
     # Restore volume from saved state, or use default
@@ -518,8 +518,8 @@ def main():
         playing_bank = cur_bank
         playing_station = cur_station
     elif not play_enabled:
-        log.info("Play/pause switch is OFF at startup — paused")
-        mpc("pause")
+        log.info("Stop/start switch is OFF at startup — stopped")
+        mpc("stop")
 
     log.info("Initial: bank=%d station=%d volume=%d play=%s",
              cur_bank, cur_station, volume, play_enabled)
@@ -623,22 +623,19 @@ def main():
             except OSError:
                 pass
 
-            # ── Play/pause switch ──
-            new_play = GPIO.input(PLAY_PAUSE_PIN) == GPIO.HIGH
+            # ── Stop/start switch ──
+            new_play = GPIO.input(STOP_START_PIN) == GPIO.HIGH
             if new_play != play_enabled:
                 play_enabled = new_play
                 if play_enabled:
-                    log.info("Play switch → ON")
-                    if (cur_bank != playing_bank or cur_station != playing_station):
-                        if get_station(stations_data, cur_bank, cur_station)[1]:
-                            play_station(stations_data, cur_bank, cur_station)
-                            playing_bank = cur_bank
-                            playing_station = cur_station
-                    else:
-                        mpc("play")
+                    log.info("Stop/start switch → ON")
+                    if get_station(stations_data, cur_bank, cur_station)[1]:
+                        play_station(stations_data, cur_bank, cur_station)
+                        playing_bank = cur_bank
+                        playing_station = cur_station
                 else:
-                    log.info("Play switch → OFF")
-                    mpc("pause")
+                    log.info("Stop/start switch → OFF")
+                    mpc("stop")
 
             # ── Stream watchdog ──
             if play_enabled and now - watchdog_last_check >= WATCHDOG_INTERVAL:
