@@ -39,9 +39,10 @@ if [ -n "$CONFIG_FILE" ]; then
     sudo sed -i 's/^dtparam=audio=on/#dtparam=audio=on/' "$CONFIG_FILE" 2>/dev/null || true
 fi
 
-# 4. Python libraries (Seesaw for I2C encoder)
+# 4. Python libraries (Seesaw for I2C encoder) in a virtual environment
 echo "→ Installing Python libraries..."
-sudo pip3 install --break-system-packages Adafruit-Blinka adafruit-circuitpython-seesaw
+sudo python3 -m venv /opt/radio-venv --system-site-packages
+sudo /opt/radio-venv/bin/pip install Adafruit-Blinka adafruit-circuitpython-seesaw
 
 # 5. Create radio user and directories
 echo "→ Setting up radio user..."
