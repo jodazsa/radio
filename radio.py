@@ -16,6 +16,7 @@ import logging
 import os
 import random
 import signal
+import socket
 import subprocess
 import sys
 import tempfile
@@ -59,6 +60,7 @@ WATCHDOG_INTERVAL = 10.0  # Seconds between stream health checks
 WATCHDOG_GRACE = 15.0     # Wait this long before restarting a dead stream
 STATE_SAVE_INTERVAL = 5.0 # Seconds between state file writes
 CONFIG_CHECK_INTERVAL = 30.0  # Seconds between stations.yaml mtime checks
+WATCHDOG_NOTIFY_INTERVAL = 10.0  # Seconds between systemd watchdog keepalives
 
 # ── Logging ──────────────────────────────────────────────────
 logging.basicConfig(
@@ -91,42 +93,32 @@ def _watchdog_enabled():
     return usec is not None and int(usec) > 0
 
 
-def _notify_watchdog():
-    """Send keepalive to systemd watchdog."""
+def _sd_notify(msg: bytes):
+    """Send a notification message to systemd via NOTIFY_SOCKET."""
     try:
         addr = os.environ.get("NOTIFY_SOCKET")
         if not addr:
             return
-        import socket
         if addr.startswith("@"):
             addr = "\0" + addr[1:]
         sock = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
         try:
             sock.connect(addr)
-            sock.sendall(b"WATCHDOG=1")
+            sock.sendall(msg)
         finally:
             sock.close()
     except Exception:
         pass
+
+
+def _notify_watchdog():
+    """Send keepalive to systemd watchdog."""
+    _sd_notify(b"WATCHDOG=1")
 
 
 def _notify_ready():
     """Tell systemd we're ready (Type=notify)."""
-    try:
-        addr = os.environ.get("NOTIFY_SOCKET")
-        if not addr:
-            return
-        import socket
-        if addr.startswith("@"):
-            addr = "\0" + addr[1:]
-        sock = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
-        try:
-            sock.connect(addr)
-            sock.sendall(b"READY=1")
-        finally:
-            sock.close()
-    except Exception:
-        pass
+    _sd_notify(b"READY=1")
 
 
 # ── State persistence ────────────────────────────────────────
@@ -293,9 +285,9 @@ def play_file(path_str):
     mpc("add", rel)
     mpc("repeat", "on")
     mpc("play")
-    # Random seek into the track
-    time.sleep(0.3)
-    _seek_random()
+    # Wait for playback to start, then seek to a random position
+    if _wait_for_playing():
+        _seek_random()
 
 
 def play_file_once(path_str):
@@ -335,15 +327,23 @@ def play_dir(path_str):
     mpc("repeat", "off")
     mpc("single", "off")
     mpc("random", "off")
-    for f in files:
-        mpc("add", _mpd_relpath(f))
+    # Batch-add all files in a single subprocess call
+    file_list = "\n".join(_mpd_relpath(f) for f in files)
+    try:
+        subprocess.run(
+            ["mpc", "add"],
+            input=file_list, text=True, timeout=30,
+            capture_output=True,
+        )
+    except Exception as e:
+        log.warning("mpc batch add failed: %s", e)
 
     start = random.randint(1, len(files))
     mpc("play", str(start))
-    # Random seek into the first selected track only.
+    # Wait for playback, then seek to a random position in the first track.
     # MPD will continue to subsequent tracks from their beginnings.
-    time.sleep(0.3)
-    _seek_random()
+    if _wait_for_playing():
+        _seek_random()
 
 
 def _resolve_path(raw: str) -> Path:
@@ -386,6 +386,18 @@ def _seek_random():
                     except (ValueError, IndexError):
                         pass
                     return
+
+
+def _wait_for_playing(timeout=2.0):
+    """Poll mpc status until [playing] appears, or timeout."""
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        status = mpc("status")
+        if "[playing]" in status:
+            return True
+        time.sleep(0.1)
+    log.warning("Timed out waiting for [playing] state")
+    return False
 
 
 def play_station(data, bank_id, station_id):
@@ -535,6 +547,9 @@ def main():
     # ── Config reload tracking ──
     last_config_check = 0.0
 
+    # ── Systemd watchdog notify tracking ──
+    last_watchdog_notify = 0.0
+
     # Tell systemd we're ready
     _notify_ready()
 
@@ -553,6 +568,7 @@ def main():
                         stations_data = load_stations()
                         stations_mtime = mt
                         log.info("Reloaded stations.yaml")
+                        mpc("update")
                 except FileNotFoundError:
                     pass
 
@@ -661,8 +677,10 @@ def main():
                 last_state_save = now
                 state_dirty = False
 
-            # ── Systemd watchdog keepalive ──
-            _notify_watchdog()
+            # ── Systemd watchdog keepalive (throttled) ──
+            if now - last_watchdog_notify >= WATCHDOG_NOTIFY_INTERVAL:
+                _notify_watchdog()
+                last_watchdog_notify = now
 
             time.sleep(POLL_INTERVAL)
 
