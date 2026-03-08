@@ -16,7 +16,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 # 1. System packages
 echo "→ Updating system and installing packages..."
 sudo apt update && sudo apt upgrade -y
-sudo apt install -y mpd mpc python3-pip python3-yaml python3-rpi.gpio i2c-tools
+sudo apt install -y mpd mpc python3-pip python3-venv python3-yaml python3-rpi.gpio i2c-tools
 
 # 2. Enable I2C
 echo "→ Enabling I2C..."
@@ -39,9 +39,10 @@ if [ -n "$CONFIG_FILE" ]; then
     sudo sed -i 's/^dtparam=audio=on/#dtparam=audio=on/' "$CONFIG_FILE" 2>/dev/null || true
 fi
 
-# 4. Python libraries (Seesaw for I2C encoder)
+# 4. Python libraries (Seesaw for I2C encoder) in a virtual environment
 echo "→ Installing Python libraries..."
-sudo pip3 install --break-system-packages Adafruit-Blinka adafruit-circuitpython-seesaw
+sudo python3 -m venv /opt/radio-venv --system-site-packages
+sudo /opt/radio-venv/bin/pip install Adafruit-Blinka adafruit-circuitpython-seesaw
 
 # 5. Create radio user and directories
 echo "→ Setting up radio user..."
