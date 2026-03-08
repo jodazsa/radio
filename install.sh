@@ -16,7 +16,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 # 1. System packages
 echo "→ Updating system and installing packages..."
 sudo apt update && sudo apt upgrade -y
-sudo apt install -y mpd mpc python3-pip python3-yaml python3-rpi.gpio i2c-tools
+sudo apt install -y mpd mpc python3-pip python3-venv python3-yaml python3-rpi.gpio i2c-tools
 
 # 2. Enable I2C
 echo "→ Enabling I2C..."
